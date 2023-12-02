@@ -12,8 +12,9 @@ import {
     PauseCircle,
 } from 'lucide-react'
 import {Slider} from '@/components/ui/slider'
-import {Outlet} from 'react-router-dom'
+import {Outlet, Link} from 'react-router-dom'
 import {useMemo, useState} from 'react'
+import {endPoint} from '@/utils/constant'
 
 const Client = () => {
     const initAudio = useMemo(() => {
@@ -57,12 +58,14 @@ const Client = () => {
                                     <div className='m-4 ml-20 text-3xl uppercase font-extrabold'>{menu.title}</div>
                                     <ul>
                                         {menu.list.map((item) => (
-                                            <li
-                                                className='flex items-center text-xl pl-16 py-3 hover:text-secondary hover:cursor-pointer  transition-colors duration-150 ease-in-out'
-                                                key={item.title}
-                                            >
-                                                {item.icon}
-                                                <span className='ml-6 font-medium capitalize'>{item.title}</span>
+                                            <li key={item.title}>
+                                                <Link
+                                                    className='flex items-center text-xl pl-16 py-3 hover:text-secondary hover:cursor-pointer  transition-colors duration-150 ease-in-out'
+                                                    to={item.slug}
+                                                >
+                                                    {item.icon}
+                                                    <span className='ml-6 font-medium capitalize'>{item.title}</span>
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
@@ -157,7 +160,7 @@ const Client = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='z-10'>
+                    <div className='z-10 p-5'>
                         <Outlet />
                     </div>
                 </div>
@@ -297,7 +300,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.home,
             },
             {
                 title: 'favourite',
@@ -310,7 +313,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.favor,
             },
         ],
     },
@@ -327,7 +330,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.recent,
             },
             {
                 title: 'Albums',
@@ -340,7 +343,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.albums,
             },
             {
                 title: 'Downloads',
@@ -354,7 +357,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.download,
             },
             {
                 title: 'Upload',
@@ -366,7 +369,7 @@ const sidebarList = [
                         />
                     </svg>
                 ),
-                slug: '',
+                slug: endPoint.upload,
             },
         ],
     },
