@@ -1,7 +1,15 @@
-import {formatListened} from '@/hooks/function'
+import {formatListened} from '@/hooks/functions'
+import {errorValue} from '@/utils/constant'
 import {CheckCircle} from 'lucide-react'
 import AliceCarousel from 'react-alice-carousel'
 import 'react-alice-carousel/lib/alice-carousel.css'
+import {Link} from 'react-router-dom'
+import {endPoint} from '../utils/constant'
+import {useState, useEffect} from 'react'
+import {IMusic} from '@/types/music'
+import {getAllMusic} from '@/services/music.service'
+import {useDispatch} from 'react-redux'
+import {setMusic} from '@/features/demo/musicSlice'
 
 const Home = () => {
     const responsiveListSong = {
@@ -10,6 +18,19 @@ const Home = () => {
     const responsiveListArtist = {
         1024: {items: 5},
     }
+
+    const dispatch = useDispatch()
+    const [listTopSong, setListTopSong] = useState<IMusic[]>()
+
+    const handlePlayMusic = (song: IMusic) => {
+        dispatch(setMusic(song))
+    }
+    useEffect(() => {
+        getAllMusic().then((res) => {
+            setListTopSong(res.element)
+        })
+    }, [])
+
     return (
         <>
             <div className='grid grid-cols-2'>
@@ -50,34 +71,50 @@ const Home = () => {
                     >
                         <div className='flex justify-between items-end mx-4 py-1'>
                             <b className='text-lg'>Billboard Topchart</b>
-                            <p>See all</p>
+                            <Link to={endPoint.trend}>
+                                <span className='hover:cursor-pointer hover:text-secondary p-3'>See all</span>
+                            </Link>
                         </div>
                         <div className='grid grid-flow-col py-2'>
-                            <AliceCarousel
-                                autoPlay={true}
-                                autoPlayInterval={4000}
-                                mouseTracking={false}
-                                infinite={true}
-                                disableDotsControls={true}
-                                disableButtonsControls={true}
-                                responsive={responsiveListSong}
-                                items={listTopSong.map((song) => (
-                                    <div key={song.id} className={`text-center`}>
-                                        <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
-                                            <img src={song.img} alt='' className='object-cover' />
+                            {listTopSong ?
+                                <AliceCarousel
+                                    autoPlay={true}
+                                    autoPlayInterval={4000}
+                                    mouseTracking={false}
+                                    infinite={true}
+                                    disableDotsControls={true}
+                                    disableButtonsControls={true}
+                                    responsive={responsiveListSong}
+                                    items={listTopSong.map((song: IMusic) => (
+                                        <div
+                                            key={song.id}
+                                            className={`text-center`}
+                                            onClick={() => handlePlayMusic(song)}
+                                        >
+                                            <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
+                                                <img
+                                                    src={song.image}
+                                                    alt=''
+                                                    className='object-cover'
+                                                    onError={({currentTarget}) => {
+                                                        currentTarget.onerror = null // prevents looping
+                                                        currentTarget.src = errorValue.image
+                                                    }}
+                                                />
+                                            </div>
+                                            <b className='text-lg truncate'>{song.name}</b>
+                                            <p className='opacity-80 flex items-center justify-center'>
+                                                {song.author?.firstName || '' + song.author?.lastName || ''}
+                                                {song.author?.isPremium ?
+                                                    <span className='ml-2 text-secondary'>
+                                                        <CheckCircle size={16} strokeWidth={3} />
+                                                    </span>
+                                                :   <></>}
+                                            </p>
                                         </div>
-                                        <b className='text-lg'>{song.name}</b>
-                                        <p className='opacity-80 flex items-center justify-center'>
-                                            {song.artist.name}
-                                            {song.artist.isArtist ?
-                                                <span className='ml-2 text-secondary'>
-                                                    <CheckCircle size={16} strokeWidth={3} />
-                                                </span>
-                                            :   <></>}
-                                        </p>
-                                    </div>
-                                ))}
-                            />
+                                    ))}
+                                />
+                            :   <></>}
                         </div>
                     </div>
                     <div
@@ -94,7 +131,7 @@ const Home = () => {
                         <div className='grid grid-flow-col py-2'>
                             <AliceCarousel
                                 autoPlay={true}
-                                autoPlayInterval={4000}
+                                autoPlayInterval={5000}
                                 mouseTracking={false}
                                 infinite={true}
                                 disableDotsControls={true}
@@ -103,7 +140,14 @@ const Home = () => {
                                 items={listTopArtist.map((artist) => (
                                     <div key={artist.id} className={`text-center`}>
                                         <div className='mx-auto mb-2 w-32 h-32 rounded-full overflow-hidden'>
-                                            <img src={artist.avatar} className='object-cover' />
+                                            <img
+                                                src={artist.avatar}
+                                                className='object-cover'
+                                                onError={({currentTarget}) => {
+                                                    currentTarget.onerror = null // prevents looping
+                                                    currentTarget.src = errorValue.image
+                                                }}
+                                            />
                                         </div>
                                         <b className='text-lg'>{artist.name}</b>
                                         <p className='opacity-80 flex items-center justify-center'>
@@ -126,59 +170,6 @@ const Home = () => {
 export default Home
 
 const uuid = crypto.getRandomValues
-
-const listTopSong = [
-    {
-        id: 1,
-        name: 'Exit Sign',
-        img: 'https://i.scdn.co/image/ab67616d0000b2738a063486be97d863207e1ca4',
-        artist: {
-            id: 1,
-            name: 'HIEUTHUHAI',
-            isArtist: true,
-        },
-    },
-    {
-        id: uuid.toString(),
-        name: 'Test',
-        img: 'https://picsum.photos/200',
-        artist: {
-            id: uuid.toString(),
-            name: 'Artist 1',
-            isArtist: false,
-        },
-    },
-    {
-        id: uuid.toString(),
-        name: 'Demo',
-        img: 'https://picsum.photos/200',
-        artist: {
-            id: uuid.toString(),
-            name: 'Artist 2',
-            isArtist: true,
-        },
-    },
-    {
-        id: uuid.toString(),
-        name: 'Tester',
-        img: 'https://picsum.photos/200',
-        artist: {
-            id: uuid.toString(),
-            name: 'giadat',
-            isArtist: false,
-        },
-    },
-    {
-        id: uuid.toString(),
-        name: 'Demo 2',
-        img: 'https://picsum.photos/200',
-        artist: {
-            id: uuid.toString(),
-            name: 'Artist 4',
-            isArtist: false,
-        },
-    },
-]
 
 const listTopArtist = [
     {

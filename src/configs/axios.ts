@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-    baseURL: 'localhost:8080',
+    baseURL: import.meta.env.VITE_API,
 })
 
 api.interceptors.response.use(
@@ -11,5 +11,11 @@ api.interceptors.response.use(
         throw new Error(msg)
     },
 )
+
+export interface ResponseSuccess<T> {
+    status: number
+    message: string
+    element: T
+}
 
 export default api

@@ -3,7 +3,7 @@ import ListMusic from '@/components/Music/ListMusic'
 import {useEffect, useState} from 'react'
 import {getAllMusic} from '@/services/music.service'
 
-const Music = () => {
+const Trend = () => {
     const [listSong, setListSong] = useState<IMusic[]>()
     useEffect(() => {
         getAllMusic().then((res) => {
@@ -15,7 +15,7 @@ const Music = () => {
         <>
             <div className='ml-6'>
                 <div>
-                    <b className='text-4xl font-extrabold'>Music</b>
+                    <b className='text-4xl font-extrabold'>Trend</b>
                 </div>
                 <div className={`w-full h-[850px] mt-5 overflow-y-scroll`}>
                     <ListMusic listSong={listSong || []} />
@@ -26,4 +26,4 @@ const Music = () => {
     )
 }
 
-export default Music
+export default Trend

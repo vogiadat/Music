@@ -1,8 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit'
+import {configureStore} from '@reduxjs/toolkit'
+import musicSlice from '../features/demo/musicSlice'
 // ...
 
 const store = configureStore({
-  reducer: {}
+    reducer: {
+        music: musicSlice,
+    },
 })
 export default store
 

@@ -10,19 +10,26 @@ import Upload from '@/pages/Upload'
 import Albums from '@/pages/Albums'
 import Home from '@/pages/Home'
 import Music from './pages/Music'
+import Artist from './pages/Artist'
+import Trend from './pages/Trend'
 
 const App = () => {
     return (
         <Routes>
             {/* Client */}
             <Route element={<Layout.Client />}>
+                {/* Sidebar */}
                 <Route path='/' element={<Home />} />
                 <Route path='/favourite' element={<Favourite />} />
                 <Route path='/recent' element={<Recent />} />
                 <Route path='/albums' element={<Albums />} />
                 <Route path='/download' element={<Download />} />
                 <Route path='/upload' element={<Upload />} />
+
+                {/* Navbar */}
                 <Route path='/music' element={<Music />} />
+                <Route path='/artist' element={<Artist />} />
+                <Route path='/trend' element={<Trend />} />
             </Route>
         </Routes>
     )
