@@ -9,6 +9,7 @@ import Download from '@/pages/Download'
 import Upload from '@/pages/Upload'
 import Albums from '@/pages/Albums'
 import Home from '@/pages/Home'
+import Music from './pages/Music'
 
 const App = () => {
     return (
@@ -21,6 +22,7 @@ const App = () => {
                 <Route path='/albums' element={<Albums />} />
                 <Route path='/download' element={<Download />} />
                 <Route path='/upload' element={<Upload />} />
+                <Route path='/music' element={<Music />} />
             </Route>
         </Routes>
     )

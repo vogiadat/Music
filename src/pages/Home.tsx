@@ -1,14 +1,14 @@
-import React from 'react'
+import {formatListened} from '@/hooks/function'
 import {CheckCircle} from 'lucide-react'
-import Slider from 'react-slick'
+import AliceCarousel from 'react-alice-carousel'
+import 'react-alice-carousel/lib/alice-carousel.css'
 
 const Home = () => {
-    const settings = {
-        speed: 500,
-        autoplay: true,
-        arrows: false,
-        slidesToShow: 3,
-        slidesToScroll: 1,
+    const responsiveListSong = {
+        1024: {items: 3},
+    }
+    const responsiveListArtist = {
+        1024: {items: 5},
     }
     return (
         <>
@@ -52,39 +52,66 @@ const Home = () => {
                             <b className='text-lg'>Billboard Topchart</b>
                             <p>See all</p>
                         </div>
-                        <div className='flex flex-nowrap gap-4 py-2 mx-4'>
-                            {listTopSong.map((song) => (
-                                <div key={song.id} className={`text-center`}>
-                                    <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
-                                        <img src={song.img} alt='' className='object-cover' />
+                        <div className='grid grid-flow-col py-2'>
+                            <AliceCarousel
+                                autoPlay={true}
+                                autoPlayInterval={4000}
+                                mouseTracking={false}
+                                infinite={true}
+                                disableDotsControls={true}
+                                disableButtonsControls={true}
+                                responsive={responsiveListSong}
+                                items={listTopSong.map((song) => (
+                                    <div key={song.id} className={`text-center`}>
+                                        <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
+                                            <img src={song.img} alt='' className='object-cover' />
+                                        </div>
+                                        <b className='text-lg'>{song.name}</b>
+                                        <p className='opacity-80 flex items-center justify-center'>
+                                            {song.artist.name}
+                                            {song.artist.isArtist ?
+                                                <span className='ml-2 text-secondary'>
+                                                    <CheckCircle size={16} strokeWidth={3} />
+                                                </span>
+                                            :   <></>}
+                                        </p>
                                     </div>
-                                    <b className='text-lg'>{song.name}</b>
-                                    <p className='opacity-80 flex items-center justify-center'>
-                                        {song.artist.name}
-                                        {song.artist.isArtist ?
-                                            <span className='ml-2 text-secondary'>
-                                                <CheckCircle size={16} strokeWidth={3} />
-                                            </span>
-                                        :   <></>}
-                                    </p>
-                                </div>
-                            ))}
-                            <Slider {...settings}>
-                                {/* <div className={`text-center`}>
-                                    <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
-                                        <img src={song.img} alt='' className='object-cover' />
+                                ))}
+                            />
+                        </div>
+                    </div>
+                    <div
+                        className='w-full mt-5 rounded-2xl overflow-hidden'
+                        style={{
+                            background: 'linear-gradient(95deg, rgba(32, 32, 32, 0.10) 0%, #202020 100%)',
+                            backdropFilter: 'blur(6px)',
+                        }}
+                    >
+                        <div className='flex justify-between items-end mx-4 py-1'>
+                            <b className='text-lg'>Top Artist</b>
+                            <p>See all</p>
+                        </div>
+                        <div className='grid grid-flow-col py-2'>
+                            <AliceCarousel
+                                autoPlay={true}
+                                autoPlayInterval={4000}
+                                mouseTracking={false}
+                                infinite={true}
+                                disableDotsControls={true}
+                                disableButtonsControls={true}
+                                responsive={responsiveListArtist}
+                                items={listTopArtist.map((artist) => (
+                                    <div key={artist.id} className={`text-center`}>
+                                        <div className='mx-auto mb-2 w-32 h-32 rounded-full overflow-hidden'>
+                                            <img src={artist.avatar} className='object-cover' />
+                                        </div>
+                                        <b className='text-lg'>{artist.name}</b>
+                                        <p className='opacity-80 flex items-center justify-center'>
+                                            {formatListened(artist.listen)}
+                                        </p>
                                     </div>
-                                    <b className='text-lg'>{song.name}</b>
-                                    <p className='opacity-80 flex items-center justify-center'>
-                                        {song.artist.name}
-                                        {song.artist.isArtist ?
-                                            <span className='ml-2 text-secondary'>
-                                                <CheckCircle size={16} strokeWidth={3} />
-                                            </span>
-                                        :   <></>}
-                                    </p>
-                                </div> */}
-                            </Slider>
+                                ))}
+                            />
                         </div>
                     </div>
                 </div>
@@ -98,7 +125,7 @@ const Home = () => {
 
 export default Home
 
-const uuid = crypto.randomUUID
+const uuid = crypto.getRandomValues
 
 const listTopSong = [
     {
@@ -150,5 +177,50 @@ const listTopSong = [
             name: 'Artist 4',
             isArtist: false,
         },
+    },
+]
+
+const listTopArtist = [
+    {
+        id: 1,
+        name: 'HIEUTHUHAI',
+        isArtist: true,
+        avatar: 'https://i.scdn.co/image/ab67616d0000b2738a063486be97d863207e1ca4',
+        listen: 100000000,
+    },
+    {
+        id: uuid.toString(),
+        name: 'Pop Smoke',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 840000,
+    },
+    {
+        id: uuid.toString(),
+        name: 'giadat',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 1200,
+    },
+    {
+        id: uuid.toString(),
+        name: 'Tester',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 5820000000,
+    },
+    {
+        id: uuid.toString(),
+        name: 'toan',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 3210000,
+    },
+    {
+        id: uuid.toString(),
+        name: 'Demoe',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 213120,
     },
 ]

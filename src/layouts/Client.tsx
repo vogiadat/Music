@@ -12,11 +12,12 @@ import {
     PauseCircle,
 } from 'lucide-react'
 import {Slider} from '@/components/ui/slider'
-import {Outlet, Link} from 'react-router-dom'
+import {Outlet, Link, useLocation} from 'react-router-dom'
 import {useMemo, useState} from 'react'
 import {endPoint} from '@/utils/constant'
 
 const Client = () => {
+    const location = useLocation()
     const initAudio = useMemo(() => {
         return new Audio(music.src)
     }, [])
@@ -79,7 +80,7 @@ const Client = () => {
                         <div className='flex-1'>
                             <ul className='flex justify-evenly text-xl font-medium uppercase'>
                                 <li className='hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out'>
-                                    Music
+                                    <Link to={endPoint.music}>Music</Link>
                                 </li>
                                 <li className='hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out'>
                                     Artists

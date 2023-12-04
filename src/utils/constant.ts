@@ -7,4 +7,5 @@ export const endPoint = {
     albums: host.concat('albums'),
     download: host.concat('download'),
     upload: host.concat('upload'),
+    music: host.concat('music'),
 }
