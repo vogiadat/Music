@@ -17,9 +17,8 @@ const Music = () => {
                 <div>
                     <b className='text-4xl font-extrabold'>Music</b>
                 </div>
-                <div className={`w-full h-[850px] mt-5 overflow-y-scroll`}>
-                    <ListMusic listSong={listSong || []} />
-                    <div className='grid grid-flow-col py-2'></div>
+                <div className={`w-full h-[850px] overflow-y-scroll`}>
+                    {listSong && <ListMusic listSong={listSong} />}
                 </div>
             </div>
         </>

@@ -1,22 +1,38 @@
 import {formatListened} from '@/hooks/functions'
 import {errorValue} from '@/utils/constant'
 import {CheckCircle} from 'lucide-react'
-import AliceCarousel from 'react-alice-carousel'
-import 'react-alice-carousel/lib/alice-carousel.css'
 import {Link} from 'react-router-dom'
 import {endPoint} from '../utils/constant'
 import {useState, useEffect} from 'react'
 import {IMusic} from '@/types/music'
 import {getAllMusic} from '@/services/music.service'
 import {useDispatch} from 'react-redux'
-import {setMusic} from '@/features/demo/musicSlice'
+import {setMusic} from '@/features/musicSlice'
+import Slider from 'react-slick'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 const Home = () => {
-    const responsiveListSong = {
-        1024: {items: 3},
+    const settingSong = {
+        infinite: listTopArtist.length >= 3 ? true : false,
+        autoplaySpeed: 3000,
+        autoplay: true,
+        lazyload: true,
+        arrows: false,
+        slidesToShow: listTopArtist.length >= 3 ? 3 : listTopArtist.length,
+        slidesToScroll: 2,
+        variableWidth: true,
     }
-    const responsiveListArtist = {
-        1024: {items: 5},
+
+    const settingAritist = {
+        infinite: listTopArtist.length >= 5 ? true : false,
+        autoplaySpeed: 2500,
+        autoplay: true,
+        lazyload: true,
+        arrows: false,
+        slidesToShow: listTopArtist.length >= 5 ? 5 : listTopArtist.length,
+        slidesToScroll: 2,
+        variableWidth: true,
     }
 
     const dispatch = useDispatch()
@@ -76,19 +92,12 @@ const Home = () => {
                             </Link>
                         </div>
                         <div className='grid grid-flow-col py-2'>
-                            {listTopSong ?
-                                <AliceCarousel
-                                    autoPlay={true}
-                                    autoPlayInterval={4000}
-                                    mouseTracking={false}
-                                    infinite={true}
-                                    disableDotsControls={true}
-                                    disableButtonsControls={true}
-                                    responsive={responsiveListSong}
-                                    items={listTopSong.map((song: IMusic) => (
+                            {listTopSong && (
+                                <Slider {...settingSong} className='mx-2'>
+                                    {listTopSong.map((song: IMusic) => (
                                         <div
                                             key={song.id}
-                                            className={`text-center`}
+                                            className='text-center'
                                             onClick={() => handlePlayMusic(song)}
                                         >
                                             <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>
@@ -102,23 +111,25 @@ const Home = () => {
                                                     }}
                                                 />
                                             </div>
-                                            <b className='text-lg truncate'>{song.name}</b>
-                                            <p className='opacity-80 flex items-center justify-center'>
-                                                {song.author?.firstName || '' + song.author?.lastName || ''}
-                                                {song.author?.isPremium ?
-                                                    <span className='ml-2 text-secondary'>
-                                                        <CheckCircle size={16} strokeWidth={3} />
-                                                    </span>
-                                                :   <></>}
-                                            </p>
+                                            <div className='w-40 truncate'>
+                                                <b className='text-lg truncate'>{song.name}</b>
+                                                <p className='opacity-80 flex items-center justify-center'>
+                                                    {song.author?.firstName || '' + song.author?.lastName || ''}
+                                                    {song.author?.isPremium ?
+                                                        <span className='ml-2 text-secondary'>
+                                                            <CheckCircle size={16} strokeWidth={3} />
+                                                        </span>
+                                                    :   <></>}
+                                                </p>
+                                            </div>
                                         </div>
                                     ))}
-                                />
-                            :   <></>}
+                                </Slider>
+                            )}
                         </div>
                     </div>
                     <div
-                        className='w-full mt-5 rounded-2xl overflow-hidden'
+                        className='w-[800px] mt-5 rounded-2xl overflow-hidden'
                         style={{
                             background: 'linear-gradient(95deg, rgba(32, 32, 32, 0.10) 0%, #202020 100%)',
                             backdropFilter: 'blur(6px)',
@@ -128,17 +139,10 @@ const Home = () => {
                             <b className='text-lg'>Top Artist</b>
                             <p>See all</p>
                         </div>
-                        <div className='grid grid-flow-col py-2'>
-                            <AliceCarousel
-                                autoPlay={true}
-                                autoPlayInterval={5000}
-                                mouseTracking={false}
-                                infinite={true}
-                                disableDotsControls={true}
-                                disableButtonsControls={true}
-                                responsive={responsiveListArtist}
-                                items={listTopArtist.map((artist) => (
-                                    <div key={artist.id} className={`text-center`}>
+                        <div className='h-52'>
+                            <Slider {...settingAritist} className='w-full'>
+                                {listTopArtist.map((artist) => (
+                                    <div key={artist.name} className={`text-center px-4 py-2`}>
                                         <div className='mx-auto mb-2 w-32 h-32 rounded-full overflow-hidden'>
                                             <img
                                                 src={artist.avatar}
@@ -155,7 +159,7 @@ const Home = () => {
                                         </p>
                                     </div>
                                 ))}
-                            />
+                            </Slider>
                         </div>
                     </div>
                 </div>
@@ -209,9 +213,9 @@ const listTopArtist = [
     },
     {
         id: uuid.toString(),
-        name: 'Demoe',
+        name: 'tester',
         isArtist: true,
         avatar: 'https://github.com/shadcn.png',
-        listen: 213120,
+        listen: 3210000,
     },
 ]

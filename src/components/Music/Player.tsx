@@ -1,4 +1,4 @@
-import {useState, ReactNode, SetStateAction, RefObject, Dispatch} from 'react'
+import {useState, ReactNode, SetStateAction, RefObject, Dispatch, useRef} from 'react'
 import {
     Volume,
     Volume1,
@@ -14,47 +14,52 @@ import {
 import {IMusic} from '@/types/music'
 import {errorValue} from '@/utils/constant'
 import {Slider} from '../ui/slider'
+import {useAppSelector} from '@/app/hook'
 
 type Props = {
-    currentSong: IMusic
-    setCurrentSong: Dispatch<SetStateAction<IMusic>>
-    isPlay: ReactNode
-    setIsPlay: Dispatch<SetStateAction<boolean>>
-    initAudio: RefObject<HTMLAudioElement>
-    progress: number
-    setProgress: Dispatch<SetStateAction<number>>
+    initMusic: IMusic
 }
 
-const Player = ({currentSong, setCurrentSong, isPlay, setIsPlay, initAudio, progress, setProgress}: Props) => {
+const Player = ({initMusic}: Props) => {
+    const [isPlay, setIsPlay] = useState(false)
     const [volume, setVolume] = useState(100)
-    console.log(currentSong)
-
-    const handleChangeVolume = (value: number[]) => {
-        const newVolume = value.at(0) || 0
-        setVolume(newVolume)
-        initAudio.current.volume = newVolume / 100
-    }
+    const [progress, setProgress] = useState(0)
+    const audioRef = useRef<HTMLAudioElement>()
 
     const handleChangeProgress = (value: number[]) => {
         return setProgress(value.at(0) || 0)
     }
 
+    const handleTime = () => {
+        const duration = audioRef.current?.duration || 1
+        const currentTime = audioRef.current?.currentTime || 1
+        setProgress((currentTime / duration) * 100)
+    }
+
+    const handleSetVolume = (value: number[]) => {
+        const newVolume = value.at(0) || 0
+        setVolume(newVolume)
+        audioRef.current.volume = newVolume / 100
+    }
+
     const handleMoveTime = (value: number[]) => {
         const time = value.at(0) || 0
-        initAudio.current.currentTime = (initAudio.current?.duration / 100) * time
+        audioRef.current.currentTime = (audioRef?.current?.duration / 100) * time
     }
 
     const toggleMusic = () => {
         setIsPlay(!isPlay)
+        !isPlay ? audioRef.current?.play() : audioRef.current?.pause()
     }
 
     return (
         <>
+            <audio ref={audioRef} src={initMusic?.src} onTimeUpdate={handleTime}></audio>
             <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32'>
                 <div className='col-span-3 flex justify-evenly gap-2 items-center mx-5'>
                     <div className='h-28 w-28 rounded-lg overflow-hidden shadow shadow-gray-900'>
                         <img
-                            src={currentSong?.image}
+                            src={initMusic?.image}
                             alt=''
                             className='object-cover'
                             onError={({currentTarget}) => {
@@ -64,9 +69,9 @@ const Player = ({currentSong, setCurrentSong, isPlay, setIsPlay, initAudio, prog
                         />
                     </div>
                     <div className='text-center truncate'>
-                        <b className='text-xl'>{currentSong?.name}</b>
+                        <b className='text-xl'>{initMusic?.name}</b>
                         <p className='text-md'>
-                            {currentSong?.author?.firstName || '' + currentSong?.author?.lastName || ''}
+                            {initMusic?.author?.firstName || '' + initMusic?.author?.lastName || ''}
                         </p>
                     </div>
                     <div className='flex gap-2 items-center'>
@@ -138,7 +143,7 @@ const Player = ({currentSong, setCurrentSong, isPlay, setIsPlay, initAudio, prog
                                 value={[progress]}
                                 min={0}
                                 max={100}
-                                step={Number(initAudio.current?.duration) / 100}
+                                step={Number(audioRef.current?.duration) / 100}
                                 onValueChange={handleChangeProgress}
                                 onValueCommit={handleMoveTime}
                             />
@@ -161,7 +166,7 @@ const Player = ({currentSong, setCurrentSong, isPlay, setIsPlay, initAudio, prog
                             min={0}
                             max={100}
                             step={1}
-                            onValueChange={handleChangeVolume}
+                            onValueChange={handleSetVolume}
                             className='volume'
                         />
                     </div>
