@@ -2,10 +2,11 @@ import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Outlet, Link, useLocation} from 'react-router-dom'
 import {endPoint} from '@/utils/constant'
 import {useAppSelector} from '@/app/hook'
-import Player from '@/components/Music/Player'
+import Player from '@/components/Layout/Player'
 // import {useEffect, useRef, useState} from 'react'
 import Sidebar from '@/components/Client/Sidebar'
 import {Search, Bell, Settings, Menu} from 'lucide-react'
+import {useState} from 'react'
 
 const user = {
     name: 'Gia Dat',
@@ -28,7 +29,7 @@ const navbarList = [
 ]
 
 const Client = () => {
-    const {music} = useAppSelector((state) => state.music)
+    const {music, listMusic} = useAppSelector((state) => state.music)
     const {pathname} = useLocation()
 
     return (
@@ -101,7 +102,7 @@ const Client = () => {
             </div>
             {music && (
                 <>
-                    <Player initMusic={music} />
+                    <Player music={music} listMusic={listMusic} />
                 </>
             )}
         </>

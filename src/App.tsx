@@ -9,9 +9,11 @@ import Download from '@/pages/Download'
 import Upload from '@/pages/Upload'
 import Albums from '@/pages/Albums'
 import Home from '@/pages/Home'
-import Music from './pages/Music'
-import Artist from './pages/Artist'
-import Trend from './pages/Trend'
+import Music from '@/pages/Music'
+import Artist from '@/pages/Artist'
+import Trend from '@/pages/Trend'
+
+import SingleArtist from './components/Client/SingleArtist'
 
 const App = () => {
     return (
@@ -30,6 +32,9 @@ const App = () => {
                 <Route path='/music' element={<Music />} />
                 <Route path='/artist' element={<Artist />} />
                 <Route path='/trend' element={<Trend />} />
+
+                {/* Single */}
+                <Route path='/artist/:id' element={<SingleArtist />} />
             </Route>
         </Routes>
     )

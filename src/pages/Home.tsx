@@ -12,6 +12,51 @@ import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 
+const listTopArtist = [
+    {
+        id: 1,
+        name: 'HIEUTHUHAI',
+        isArtist: true,
+        avatar: 'https://i.scdn.co/image/ab67616d0000b2738a063486be97d863207e1ca4',
+        listen: 100000000,
+    },
+    {
+        id: 2,
+        name: 'Pop Smoke',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 840000,
+    },
+    {
+        id: 3,
+        name: 'giadat',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 1200,
+    },
+    {
+        id: 4,
+        name: 'Tester',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 5820000000,
+    },
+    {
+        id: 5,
+        name: 'toan',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 3210000,
+    },
+    {
+        id: 6,
+        name: 'tester',
+        isArtist: true,
+        avatar: 'https://github.com/shadcn.png',
+        listen: 3210000,
+    },
+]
+
 const Home = () => {
     const settingSong = {
         infinite: listTopArtist.length >= 3 ? true : false,
@@ -172,50 +217,3 @@ const Home = () => {
 }
 
 export default Home
-
-const uuid = crypto.getRandomValues
-
-const listTopArtist = [
-    {
-        id: 1,
-        name: 'HIEUTHUHAI',
-        isArtist: true,
-        avatar: 'https://i.scdn.co/image/ab67616d0000b2738a063486be97d863207e1ca4',
-        listen: 100000000,
-    },
-    {
-        id: uuid.toString(),
-        name: 'Pop Smoke',
-        isArtist: true,
-        avatar: 'https://github.com/shadcn.png',
-        listen: 840000,
-    },
-    {
-        id: uuid.toString(),
-        name: 'giadat',
-        isArtist: true,
-        avatar: 'https://github.com/shadcn.png',
-        listen: 1200,
-    },
-    {
-        id: uuid.toString(),
-        name: 'Tester',
-        isArtist: true,
-        avatar: 'https://github.com/shadcn.png',
-        listen: 5820000000,
-    },
-    {
-        id: uuid.toString(),
-        name: 'toan',
-        isArtist: true,
-        avatar: 'https://github.com/shadcn.png',
-        listen: 3210000,
-    },
-    {
-        id: uuid.toString(),
-        name: 'tester',
-        isArtist: true,
-        avatar: 'https://github.com/shadcn.png',
-        listen: 3210000,
-    },
-]

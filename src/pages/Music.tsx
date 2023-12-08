@@ -1,5 +1,5 @@
 import {IMusic} from '@/types/music'
-import ListMusic from '@/components/Music/ListMusic'
+import ListMusic from '@/components/Layout/ListMusic'
 import {useEffect, useState} from 'react'
 import {getAllMusic} from '@/services/music.service'
 

@@ -4,11 +4,13 @@ import {IMusic} from '@/types/music'
 // Define a type for the slice state
 export interface MusicState {
     music: null | IMusic
+    listMusic: null | IMusic[]
 }
 
 // Define the initial state using that type
 const initialState: MusicState = {
     music: null,
+    listMusic: null,
 }
 
 export const musicSlice = createSlice({
@@ -17,7 +19,9 @@ export const musicSlice = createSlice({
     initialState,
     reducers: {
         setMusic: (state, action) => {
-            state.music = action.payload
+            const {song, listSong} = action.payload
+            state.music = song
+            state.listMusic = listSong
         },
     },
 })

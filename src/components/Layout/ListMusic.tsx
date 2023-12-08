@@ -14,7 +14,7 @@ const ListMusic = ({listSong}: Props) => {
     const {music} = useAppSelector((state) => state.music)
 
     const handlePlayMusic = async (song: IMusic) => {
-        dispatch(setMusic(song))
+        dispatch(setMusic({song, listSong}))
     }
 
     return (
