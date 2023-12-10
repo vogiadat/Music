@@ -10,6 +10,10 @@ export const endPoint = {
     music: host.concat('music'),
     artist: host.concat('artist'),
     trend: host.concat('trend'),
+    auth: {
+        login: host.concat('auth/login'),
+        register: host.concat('auth/register'),
+    },
 }
 
 export const errorValue = {

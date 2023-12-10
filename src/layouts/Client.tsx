@@ -3,15 +3,23 @@ import {Outlet, Link, useLocation} from 'react-router-dom'
 import {endPoint} from '@/utils/constant'
 import {useAppSelector} from '@/app/hook'
 import Player from '@/components/Layout/Player'
-// import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import Sidebar from '@/components/Client/Sidebar'
-import {Search, Bell, Settings, Menu} from 'lucide-react'
-import {useState} from 'react'
+import {Search, Bell, Settings, Menu, ChevronDown, User} from 'lucide-react'
+import {IMusic} from '@/types/music'
+import {errorValue} from '../utils/constant'
+import {HoverCard, HoverCardContent} from '@radix-ui/react-hover-card'
+import {HoverCardTrigger} from '@/components/ui/hover-card'
+import {Dialog, DialogTrigger} from '@/components/ui/dialog'
+import Login from '@/pages/Auth/Login'
+import Register from '@/pages/Auth/Register'
+import {Toaster} from '@/components/ui/toaster'
 
-const user = {
-    name: 'Gia Dat',
-    avatarUrl: 'https://github.com/shadcn.png',
-}
+// const user = {
+//     name: 'Gia Dat',
+//     avatarUrl: 'https://github.com/shadcn.png',
+// }
+const user = null
 
 const navbarList = [
     {
@@ -29,11 +37,65 @@ const navbarList = [
 ]
 
 const Client = () => {
-    const {music, listMusic} = useAppSelector((state) => state.music)
+    const [isLogin, setIsLogin] = useState(true)
     const {pathname} = useLocation()
+
+    // data
+    const {music, listMusic} = useAppSelector((state) => state.music)
+
+    // ref
+    const audio = useRef<HTMLAudioElement>(null)
+
+    // handle music
+    const [initMusic, setInitMusic] = useState<IMusic | null>(music)
+    const [isPlay, setIsPlay] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [duration, setDuration] = useState(1)
+    const [currentTime, setCurrentTime] = useState(1)
+
+    const toggleMusic = () => {
+        setIsPlay(!isPlay)
+    }
+
+    const handleTime = () => {
+        const initDuration = audio.current?.duration || 1
+        const initCurrentTime = audio.current?.currentTime || 1
+        setCurrentTime(initCurrentTime)
+        setDuration(initDuration)
+        setProgress((initCurrentTime / initDuration) * 100)
+    }
+
+    const handleNextSong = () => {
+        if (listMusic && music) {
+            const indexMusic = listMusic.findIndex((song) => song.id === music.id)
+            const indexSong = listMusic.findIndex((song) => song.id === initMusic?.id)
+            const initSong = indexSong >= 0 ? indexSong : indexMusic
+            const newSong = initSong + 1 >= listMusic.length ? 0 : initSong + 1
+            setInitMusic(listMusic.at(newSong) || null)
+        }
+    }
+
+    const handlePrevSong = () => {
+        if (listMusic && music) {
+            const initSong = listMusic.findIndex((song) => song.id === initMusic?.id)
+            // const initSong = indexSong
+            const newSong = initSong - 1 < 0 ? listMusic.length : initSong - 1
+            setInitMusic(listMusic.at(newSong) || null)
+        }
+    }
+
+    useEffect(() => {
+        if (isPlay) {
+            audio.current?.play()
+            setDuration(audio.current?.duration || 1)
+        } else {
+            audio.current?.pause()
+        }
+    }, [isPlay, duration])
 
     return (
         <>
+            <Toaster />
             <div className='grid grid-cols-12 fixed z-20 inset-0 bg-black text-white'>
                 <Sidebar />
                 <div className='md:col-span-10 col-span-12'>
@@ -85,12 +147,44 @@ const Client = () => {
                                         <Settings />
                                     </li>
                                 </ul>
-                                <div className='flex items-center md:-my-1 md:ml-4'>
-                                    <Avatar>
-                                        <AvatarImage src={user.avatarUrl} alt={user.name[0]} />
-                                        <AvatarFallback>{user.name}</AvatarFallback>
-                                    </Avatar>
-                                    <span className='ml-4 md:block hidden'>CN</span>
+                                <div className='flex items-center md:-my-1 md:ml-4' onClick={() => {}}>
+                                    {user ?
+                                        <HoverCard>
+                                            <HoverCardTrigger>
+                                                <Avatar>
+                                                    <AvatarImage
+                                                        // src={user.avatarUrl.concat('/da') || ''}
+                                                        onError={({currentTarget}) => {
+                                                            currentTarget.onerror = null // prevents looping
+                                                            currentTarget.src = errorValue.image
+                                                        }}
+                                                    />
+                                                    <AvatarFallback className='text-background text-center'>
+                                                        {/* {user.name[0]} */}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className='flex hover:text-secondary hover:cursor-pointer'>
+                                                    {/* <span className='ml-4 md:block hidden'>{user.name}</span> */}
+                                                    <ChevronDown />
+                                                </div>
+                                            </HoverCardTrigger>
+                                            <HoverCardContent className='ml-16 mt-2 bg-zinc-800 w-32 rounded-lg p-2'>
+                                                <div className='hover:text-secondary px-2'>Logout</div>
+                                            </HoverCardContent>
+                                        </HoverCard>
+                                    :   <Dialog>
+                                            <DialogTrigger>
+                                                <Avatar>
+                                                    <AvatarFallback className='text-background text-center hover:cursor-pointer'>
+                                                        <User />
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                            </DialogTrigger>
+                                            {isLogin ?
+                                                <Login setIsLogin={setIsLogin} />
+                                            :   <Register setIsLogin={setIsLogin} />}
+                                        </Dialog>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -102,7 +196,19 @@ const Client = () => {
             </div>
             {music && (
                 <>
-                    <Player music={music} listMusic={listMusic} />
+                    <audio ref={audio} src={initMusic?.src || music.src} onTimeUpdate={handleTime} />
+                    <Player
+                        song={initMusic || music}
+                        setSong={setInitMusic}
+                        listSong={listMusic}
+                        progress={progress}
+                        setProgress={setProgress}
+                        isPlay={isPlay}
+                        toggleMusic={toggleMusic}
+                        handleNext={handleNextSong}
+                        handlePrev={handlePrevSong}
+                        duration={duration}
+                    />
                 </>
             )}
         </>

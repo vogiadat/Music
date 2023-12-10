@@ -86,6 +86,7 @@ const Home = () => {
     const handlePlayMusic = (song: IMusic) => {
         dispatch(setMusic(song))
     }
+
     useEffect(() => {
         getAllMusic().then((res) => {
             setListTopSong(res.element)

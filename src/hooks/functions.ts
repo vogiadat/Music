@@ -23,3 +23,6 @@ export const formatTime = (seconds: number): string => {
 
     return `${formattedMinutes}:${formattedSeconds}`
 }
+
+export const formatName = (firstName: string, lastName: string) =>
+    firstName == '' && lastName == '' ? 'Not found' : firstName + '' + lastName

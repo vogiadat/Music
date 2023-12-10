@@ -1,4 +1,4 @@
-import {MouseEventHandler, useEffect, useState} from 'react'
+import {useState, useRef, useEffect, ReactNode, Ref, RefAttributes} from 'react'
 import {
     Volume,
     Volume1,
@@ -13,30 +13,61 @@ import {
     Heart,
     MoreHorizontal,
 } from 'lucide-react'
-import {Slider} from '../ui/slider'
-import {errorValue} from '@/utils/constant'
 import {IMusic} from '@/types/music'
-import {formatName} from '@/hooks/functions'
+import {errorValue} from '@/utils/constant'
+import {Slider} from '../ui/slider'
+// import {useAppSelector} from '@/app/hook'
 
 type Props = {
-    song: IMusic
-    toggleMusic: MouseEventHandler
-    isPlay: boolean
+    music: IMusic
+    listMusic: IMusic[]
+    audioRef: RefAttributes
+    initMusic: IMusic
+    setInitMusic: IMusic
     progress: number
     setProgress: number
-    duration: number
-    handleNext: MouseEventHandler
-    handlePrev: MouseEventHandler
 }
 
-const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, handleNext, handlePrev}: Props) => {
+const Player = ({audioRef, initMusic, setInitMusic, listMusic, progress, setProgress}: Props) => {
+    const [isPlay, setIsPlay] = useState(false)
+    const [volume, setVolume] = useState(100)
+
+    useEffect(() => {}, [initMusic, progress])
+
+    const handleChangeProgress = (value: number[]) => {
+        return setProgress(value.at(0) || 0)
+    }
+
+    const handleSetVolume = (value: number[]) => {
+        const newVolume = value.at(0) || 0
+        setVolume(newVolume)
+        audioRef.current.volume = newVolume / 100
+    }
+
+    const handleMoveTime = (value: number[]) => {
+        const time = value.at(0) || 0
+        audioRef.current.currentTime = (audioRef.current.duration / 100) * time
+    }
+
+    const handleSkip = () => {
+        const indexSong = listMusic.findIndex((song) => song.id == initMusic.id)
+        const newSong = indexSong + 1 >= listMusic.length ? 0 : indexSong + 1
+        setInitMusic(listMusic.at(newSong))
+        audioRef.current.play()
+    }
+
+    const toggleMusic = () => {
+        setIsPlay(!isPlay)
+        !isPlay ? audioRef?.current?.play() : audioRef?.current?.pause()
+    }
+
     return (
         <>
             <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32'>
                 <div className='col-span-3 flex justify-evenly gap-2 items-center mx-5'>
                     <div className='h-28 w-28 rounded-lg overflow-hidden shadow shadow-gray-900'>
                         <img
-                            src={song.image}
+                            src={initMusic?.image}
                             alt=''
                             className='object-cover'
                             onError={({currentTarget}) => {
@@ -45,10 +76,10 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                             }}
                         />
                     </div>
-                    <div className='text-center truncate w-44'>
-                        <b className='text-xl'>{song.name}</b>
+                    <div className='text-center truncate'>
+                        <b className='text-xl'>{initMusic?.name}</b>
                         <p className='text-md'>
-                            {formatName(song.author?.firstName || '', song.author?.lastName || '')}
+                            {initMusic?.author?.firstName || '' + initMusic?.author?.lastName || ''}
                         </p>
                     </div>
                     <div className='flex gap-2 items-center'>
@@ -70,20 +101,20 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                                     </button>
                                 </li>
                                 <li>
-                                    <button onClick={handlePrev}>
-                                        <SkipBack className='hover:text-secondary' />
+                                    <button>
+                                        <SkipBack />
                                     </button>
                                 </li>
                                 <li className='w-20 h-20 flex items-center justify-center'>
-                                    <button type='button' onClick={toggleMusic}>
+                                    <button type='button' onClick={toggleMusic} className=''>
                                         {!isPlay ?
                                             <PlayCircle size={60} strokeWidth={1} />
                                         :   <PauseCircle size={60} strokeWidth={1} className='stroke-secondary' />}
                                     </button>
                                 </li>
                                 <li>
-                                    <button onClick={handleNext}>
-                                        <SkipForward className='hover:text-secondary' />
+                                    <button onClick={handleSkip}>
+                                        <SkipForward />
                                     </button>
                                 </li>
                                 <li>
@@ -98,9 +129,9 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                                 value={[progress]}
                                 min={0}
                                 max={100}
-                                step={duration / 100}
-                                // onValueChange={handleChangeProgress}
-                                // onValueCommit={handleMoveTime}
+                                step={Number(audioRef.current?.duration) / 100}
+                                onValueChange={handleChangeProgress}
+                                onValueCommit={handleMoveTime}
                             />
                         </div>
                     </div>
@@ -108,21 +139,20 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                 <div className='col-span-3 flex justify-center'>
                     <div className='w-7/12 flex'>
                         <div className='mr-5'>
-                            {/* {volume == 0 ?
+                            {volume == 0 ?
                                 <VolumeX />
                             : volume < 20 ?
                                 <Volume />
                             : volume < 60 ?
                                 <Volume1 />
-                            :   <Volume2 />} */}
-                            <Volume2 />
+                            :   <Volume2 />}
                         </div>
                         <Slider
-                            // value={[volume]}
+                            value={[volume]}
                             min={0}
                             max={100}
                             step={1}
-                            // onValueChange={handleSetVolume}
+                            onValueChange={handleSetVolume}
                             className='volume'
                         />
                     </div>

@@ -19,22 +19,24 @@ const App = () => {
     return (
         <Routes>
             {/* Client */}
-            <Route element={<Layout.Client />}>
+            <Route path='/' element={<Layout.Client />}>
                 {/* Sidebar */}
-                <Route path='/' element={<Home />} />
-                <Route path='/favourite' element={<Favourite />} />
-                <Route path='/recent' element={<Recent />} />
-                <Route path='/albums' element={<Albums />} />
-                <Route path='/download' element={<Download />} />
-                <Route path='/upload' element={<Upload />} />
+                <Route path='' element={<Home />} />
+                <Route path='favourite' element={<Favourite />} />
+                <Route path='recent' element={<Recent />} />
+                <Route path='albums' element={<Albums />} />
+                <Route path='download' element={<Download />} />
+                <Route path='upload' element={<Upload />} />
 
                 {/* Navbar */}
-                <Route path='/music' element={<Music />} />
-                <Route path='/artist' element={<Artist />} />
-                <Route path='/trend' element={<Trend />} />
+                <Route path='music' element={<Music />} />
+                <Route path='artist'>
+                    <Route path='' element={<Artist />} />
+                    <Route path=':id' element={<SingleArtist />} />
+                </Route>
+                <Route path='trend' element={<Trend />} />
 
                 {/* Single */}
-                <Route path='/artist/:id' element={<SingleArtist />} />
             </Route>
         </Routes>
     )
