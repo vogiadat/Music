@@ -1,19 +1,30 @@
-import {IAlbum} from '@/types/music'
-import {Heart, MoreHorizontal, PlayCircle, Search} from 'lucide-react'
+import {IMusic} from '@/types/music'
+import {Heart, MoreHorizontal, Music2, PlayCircle, Search} from 'lucide-react'
 // import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import TableMusic from './TableMusic'
 import {IContent} from '@/types/content'
-import {errorValue} from '@/utils/constant'
+import {endPoint, errorValue} from '@/utils/constant'
+import {Link} from 'react-router-dom'
+import {Avatar, AvatarFallback, AvatarImage} from '../ui/avatar'
+
+interface Music {
+    index: number
+    song: IMusic
+}
 
 type Props = {
-    data?: IAlbum
+    data: Music[]
     content: IContent
 }
 
-const Music = ({data, content}: Props) => {
+const Content = ({data, content}: Props) => {
     return (
         <>
-            <div className='w-full h-[850px] overflow-y-scroll bg-gradient-to-b from-background rounded-t-xl'>
+            <div
+                className={`w-full h-[850px] overflow-y-scroll ${
+                    content.page === 'PLAYLISTS' ? 'bg-gradient-to-b from-background ' : 'bg-transparent'
+                } rounded-t-xl`}
+            >
                 <div className='p-6 grid grid-cols-4 gap-10'>
                     <div className='col-span-1'>
                         <img
@@ -30,10 +41,28 @@ const Music = ({data, content}: Props) => {
                         <div className=''>
                             <p className='mb-2 text-xl font-medium'>{content.page}</p>
                             <b className='text-4xl font-extrabold'>{content.title}</b>
-                            <p className='mt-4 opacity-50'>{content.subtitle}</p>
+                            <p className='mt-4 opacity-50'>
+                                {content.avatar && (
+                                    <Avatar>
+                                        <AvatarImage
+                                            src={content.avatar}
+                                            onError={({currentTarget}) => {
+                                                currentTarget.onerror = null // prevents looping
+                                                currentTarget.src = errorValue.image
+                                            }}
+                                        />
+                                        <AvatarFallback className='text-background text-center'>
+                                            {content.subtitle}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                )}
+                                {content.subtitle}
+                            </p>
                         </div>
                     </div>
-                    <div className='col-span-full flex justify-between'>
+                    <div
+                        className={`${content.page === 'PLAYLISTS' ? '' : 'hidden'} col-span-full flex justify-between`}
+                    >
                         <div className='flex items-center gap-20'>
                             <div>
                                 <PlayCircle size={70} strokeWidth={1} />
@@ -67,11 +96,24 @@ const Music = ({data, content}: Props) => {
                     </div>
                 </div>
                 <div className=''>
-                    <TableMusic />
+                    {data ?
+                        <TableMusic data={data} />
+                    :   <div className='h-[420px] bg-gradient-to-b from-background grid text-center mt-5 border border-background '>
+                            <Music2 size={80} className='mx-auto mt-16 ' />
+                            <b className='text-4xl font-bold'>Songs you like will appear here</b>
+                            <p className='text-xl'>Songs you like will appear here</p>
+                            <Link
+                                to={endPoint.music}
+                                className='h-10 mx-auto text-center bg-secondary py-2 px-3 rounded-xl hover:opacity-80'
+                            >
+                                Find Song
+                            </Link>
+                        </div>
+                    }
                 </div>
             </div>
         </>
     )
 }
 
-export default Music
+export default Content

@@ -11,7 +11,7 @@ import {login} from '@/features/authSlice'
 import {useAppDispatch} from '@/app/hook'
 import {DialogContent} from '@/components/ui/dialog'
 import {useToast} from '@/components/ui/use-toast'
-import {ToastAction} from '@/components/ui/toast'
+import {MouseEventHandler} from 'react'
 
 const formSchema = z.object({
     email: z.string().min(1, {message: 'Email is required!!'}).email({message: 'Email/Password is invaild'}),
@@ -22,10 +22,10 @@ const formSchema = z.object({
 })
 
 interface Props {
-    setIsLogin: boolean
+    handleModal: MouseEventHandler
 }
 
-const Login = ({setIsLogin}: Props) => {
+const Login = ({handleModal}: Props) => {
     const {toast} = useToast()
     const dispatch = useAppDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -36,15 +36,21 @@ const Login = ({setIsLogin}: Props) => {
         },
     })
 
-    const onSubmit = () => {
-        try {
-            dispatch(login(form.getValues()))
-        } catch (error) {
+    const onSubmit = async () => {
+        const res = await dispatch(login(form.getValues()))
+        const msg = res?.error?.message
+
+        if (msg) {
             toast({
                 variant: 'destructive',
-                title: 'Uh oh! Something went wrong.',
-                description: 'There was a problem with your request.',
-                action: <ToastAction altText='Try again'>Try again</ToastAction>,
+                title: 'Error',
+                description: `${msg}`,
+            })
+        } else {
+            toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Login success`,
             })
         }
     }
@@ -123,9 +129,7 @@ const Login = ({setIsLogin}: Props) => {
                             <Separator />
                             <div className='text-center font-extrabold text-zinc-400'>Don't have an account?</div>
                             <button
-                                onClick={() => {
-                                    setIsLogin(false)
-                                }}
+                                onClick={handleModal}
                                 className='w-full text-center border border-zinc-400 p-2 hover:cursor-pointer text-zinc-400 font-medium uppercase rounded-3xl flex items-center justify-center transition-colors duration-150 ease-linear'
                             >
                                 Sign up for Life & music

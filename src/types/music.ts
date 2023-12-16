@@ -23,3 +23,19 @@ export interface IMusic {
     author?: IUser
     album?: IAlbum
 }
+
+export interface IPlaylist {
+    rows: IMusic[]
+    total: number
+    skip: number
+    limit: number
+    page: number
+}
+
+export interface IFavor {
+    id: string
+    media: IMusic
+    mediaId: string
+    createAt: string
+    updateAt: string
+}

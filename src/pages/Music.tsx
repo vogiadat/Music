@@ -10,6 +10,7 @@ const Music = () => {
             setListSong(res.element)
         })
     }, [])
+    // console.log(listSong)
 
     return (
         <>

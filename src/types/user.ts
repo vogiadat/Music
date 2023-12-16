@@ -16,6 +16,7 @@ export interface IUser {
     email: string
     phone: string
     password: string
+    avatar: string
     isPremium: boolean
     roleCode: ERole
     role?: Role

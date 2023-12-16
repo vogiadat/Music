@@ -1,7 +1,7 @@
 import {MoreHorizontal} from 'lucide-react'
 import {IMusic} from '../../types/music'
 import {useDispatch} from 'react-redux'
-import {setMusic} from '@/features/musicSlice'
+import {currentSong} from '@/features/musicSlice'
 import {errorValue} from '@/utils/constant'
 import {useAppSelector} from '@/app/hook'
 
@@ -14,7 +14,7 @@ const ListMusic = ({listSong}: Props) => {
     const {music} = useAppSelector((state) => state.music)
 
     const handlePlayMusic = async (song: IMusic) => {
-        dispatch(setMusic({song, listSong}))
+        dispatch(currentSong({song, listSong}))
     }
 
     return (
@@ -24,7 +24,7 @@ const ListMusic = ({listSong}: Props) => {
                     {listSong.map((song: IMusic, index: number) => {
                         return (
                             <li
-                                key={song.name}
+                                key={song.id}
                                 className='grid grid-cols-12 p-2 rounded-2xl my-4 hover:cursor-pointer bg-neutral-800 bg-opacity-40 hover:bg-secondary hover:bg-opacity-80 transition-colors duration-150 ease-in-out'
                                 onClick={() => handlePlayMusic(song)}
                             >

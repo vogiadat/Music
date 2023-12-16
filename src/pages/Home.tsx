@@ -6,11 +6,13 @@ import {endPoint} from '../utils/constant'
 import {useState, useEffect} from 'react'
 import {IMusic} from '@/types/music'
 import {getAllMusic} from '@/services/music.service'
-import {useDispatch} from 'react-redux'
-import {setMusic} from '@/features/musicSlice'
+// import {useDispatch} from 'react-redux'
+// import {currentSong} from '@/features/musicSlice'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import {useAppDispatch} from '@/app/hook'
+import {currentSong} from '@/features/musicSlice'
 
 const listTopArtist = [
     {
@@ -58,8 +60,10 @@ const listTopArtist = [
 ]
 
 const Home = () => {
+    const dispatch = useAppDispatch()
+    const [listSong, setListSong] = useState<IMusic[]>()
     const settingSong = {
-        infinite: listTopArtist.length >= 3 ? true : false,
+        infinite: true,
         autoplaySpeed: 3000,
         autoplay: true,
         lazyload: true,
@@ -68,9 +72,8 @@ const Home = () => {
         slidesToScroll: 2,
         variableWidth: true,
     }
-
     const settingAritist = {
-        infinite: listTopArtist.length >= 5 ? true : false,
+        infinite: true,
         autoplaySpeed: 2500,
         autoplay: true,
         lazyload: true,
@@ -80,16 +83,13 @@ const Home = () => {
         variableWidth: true,
     }
 
-    const dispatch = useDispatch()
-    const [listTopSong, setListTopSong] = useState<IMusic[]>()
-
     const handlePlayMusic = (song: IMusic) => {
-        dispatch(setMusic(song))
+        dispatch(currentSong({song, listSong}))
     }
 
     useEffect(() => {
         getAllMusic().then((res) => {
-            setListTopSong(res.element)
+            setListSong(res.element)
         })
     }, [])
 
@@ -138,12 +138,12 @@ const Home = () => {
                             </Link>
                         </div>
                         <div className='grid grid-flow-col py-2'>
-                            {listTopSong && (
+                            {listSong && (
                                 <Slider {...settingSong} className='mx-2'>
-                                    {listTopSong.map((song: IMusic) => (
+                                    {listSong.map((song: IMusic) => (
                                         <div
                                             key={song.id}
-                                            className='text-center'
+                                            className='text-center hover:cursor-pointer'
                                             onClick={() => handlePlayMusic(song)}
                                         >
                                             <div className='mx-auto w-32 h-32 rounded-2xl overflow-hidden'>

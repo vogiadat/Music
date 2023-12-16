@@ -1,12 +1,14 @@
 import {configureStore} from '@reduxjs/toolkit'
 import musicSlice from '../features/musicSlice'
 import authSlice from '@/features/authSlice'
+import favorSlice from '@/features/favorSlice'
 // ...
 
 const store = configureStore({
     reducer: {
         music: musicSlice,
         auth: authSlice,
+        favor: favorSlice,
     },
 })
 export default store

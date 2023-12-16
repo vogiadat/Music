@@ -7,7 +7,8 @@ import {Input} from '@/components/ui/input'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Separator} from '@/components/Layout/UI'
 import GoogleIcon from '@/assets/imgs/google.png'
-import {Dialog, DialogContent, DialogTrigger} from '@/components/ui/dialog'
+import {DialogContent} from '@/components/ui/dialog'
+import {MouseEventHandler} from 'react'
 
 const formSchema = z.object({
     email: z.string().min(1, {message: 'Email is required!!'}).email({message: 'Email/Password is invaild'}),
@@ -22,10 +23,10 @@ const formSchema = z.object({
 })
 
 interface Props {
-    setIsLogin: boolean
+    handleModal: MouseEventHandler
 }
 
-const Register = ({setIsLogin}: Props) => {
+const Register = ({handleModal}: Props) => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -127,9 +128,7 @@ const Register = ({setIsLogin}: Props) => {
                             <Separator />
                             <div className='text-center font-extrabold text-zinc-400'>Have an account?</div>
                             <button
-                                onClick={() => {
-                                    setIsLogin(true)
-                                }}
+                                onClick={handleModal}
                                 className='w-full text-center border border-zinc-400 p-2 hover:cursor-pointer text-zinc-400 font-medium uppercase rounded-3xl flex items-center justify-center transition-colors duration-150 ease-linear'
                             >
                                 Login for Life & music

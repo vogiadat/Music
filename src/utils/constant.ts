@@ -1,5 +1,7 @@
 const host = import.meta.env.BASE_URL
 
+export const CLIENT_TOKEN = '__CLIENT_TOKEN__'
+
 export const endPoint = {
     home: host.concat(''),
     favor: host.concat('favourite'),

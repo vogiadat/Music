@@ -1,7 +1,9 @@
-import React from 'react'
-import Music from '../Layout/Music'
-import {IAlbum} from '@/types/music'
+import React, {useEffect, useState} from 'react'
+import Content from '../Layout/Content'
+import {IAlbum, IMusic} from '@/types/music'
 import {IContent} from '@/types/content'
+import {getAllMusic} from '@/services/music.service'
+import {getAllArtist} from '@/services/user.service'
 
 const data: IAlbum = {
     id: '1',
@@ -22,17 +24,20 @@ const data: IAlbum = {
     ],
 }
 
-const content: IContent = {
-    page: 'Music',
-    title: data.authorId,
-    subtitle: data.desc,
-    image: data.image,
-}
-
 const SingleArtist = () => {
+    const [listSong, setListSong] = useState<IMusic[]>([])
+    const [content, setContent] = useState<IContent>({page: 'ARTIST', title: '', subtitle: '', image: ''})
+
+    useEffect(() => {
+        // getSin
+        getAllMusic().then((res) => {
+            setListSong(res.element)
+        })
+    }, [])
+
     return (
         <>
-            <Music data={data} content={content} />
+            <Content data={data} content={content} />
         </>
     )
 }

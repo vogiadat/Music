@@ -1,4 +1,4 @@
-import {MouseEventHandler, useEffect, useState} from 'react'
+import {MouseEventHandler} from 'react'
 import {
     Volume,
     Volume1,
@@ -17,19 +17,51 @@ import {Slider} from '../ui/slider'
 import {errorValue} from '@/utils/constant'
 import {IMusic} from '@/types/music'
 import {formatName} from '@/hooks/functions'
+import {useAppSelector} from '@/app/hook'
+
+type TSlider = (value: number[]) => void
 
 type Props = {
     song: IMusic
     toggleMusic: MouseEventHandler
     isPlay: boolean
-    progress: number
-    setProgress: number
+    isLoop: boolean
+    isShuffle: boolean
+    currentTime: number
     duration: number
+    volume: number
     handleNext: MouseEventHandler
     handlePrev: MouseEventHandler
+    handleVolume: TSlider
+    handleProgress: TSlider
+    handleLoop: MouseEventHandler
+    handleShuffle: MouseEventHandler
+    handleFavor: MouseEventHandler
 }
 
-const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, handleNext, handlePrev}: Props) => {
+const Player = ({
+    song,
+    isPlay,
+    isLoop,
+    isShuffle,
+    volume,
+    currentTime,
+    toggleMusic,
+    handleNext,
+    handlePrev,
+    handleVolume,
+    handleProgress,
+    handleLoop,
+    handleShuffle,
+    handleFavor,
+}: Props) => {
+    const {listFavor} = useAppSelector((state) => state.favor)
+
+    const IsFavor = () => {
+        const isFavor = listFavor?.find((music) => music.media.id === song.id)
+        return isFavor ? <Heart className='text-secondary fill-current' /> : <Heart />
+    }
+
     return (
         <>
             <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32'>
@@ -52,8 +84,8 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                         </p>
                     </div>
                     <div className='flex gap-2 items-center'>
-                        <button>
-                            <Heart />
+                        <button onClick={handleFavor}>
+                            <IsFavor />
                         </button>
                         <button>
                             <MoreHorizontal />
@@ -65,7 +97,7 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                         <div className='row'>
                             <ul className='flex w-2/5 mx-auto justify-around items-center'>
                                 <li>
-                                    <button>
+                                    <button className={isLoop ? 'text-secondary' : 'text-white'} onClick={handleLoop}>
                                         <Repeat2 />
                                     </button>
                                 </li>
@@ -87,42 +119,37 @@ const Player = ({song, isPlay, duration, progress, setProgress, toggleMusic, han
                                     </button>
                                 </li>
                                 <li>
-                                    <button>
+                                    <button
+                                        className={isShuffle ? 'text-secondary' : 'text-white'}
+                                        onClick={handleShuffle}
+                                    >
                                         <Shuffle />
                                     </button>
                                 </li>
                             </ul>
                         </div>
-                        <div className='row mt-2'>
-                            <Slider
-                                value={[progress]}
-                                min={0}
-                                max={100}
-                                step={duration / 100}
-                                // onValueChange={handleChangeProgress}
-                                // onValueCommit={handleMoveTime}
-                            />
+                        <div className='row w-full mt-2'>
+                            <Slider value={[currentTime]} min={0} max={100} step={1} onValueChange={handleProgress} />
                         </div>
                     </div>
                 </div>
                 <div className='col-span-3 flex justify-center'>
                     <div className='w-7/12 flex'>
                         <div className='mr-5'>
-                            {/* {volume == 0 ?
+                            {volume == 0 ?
                                 <VolumeX />
                             : volume < 20 ?
                                 <Volume />
                             : volume < 60 ?
                                 <Volume1 />
-                            :   <Volume2 />} */}
-                            <Volume2 />
+                            :   <Volume2 />}
                         </div>
                         <Slider
-                            // value={[volume]}
+                            value={[volume]}
                             min={0}
                             max={100}
                             step={1}
-                            // onValueChange={handleSetVolume}
+                            onValueChange={handleVolume}
                             className='volume'
                         />
                     </div>

@@ -1,13 +1,15 @@
-import {IMusic} from '@/types/music'
+import {IFavor, IMusic} from '@/types/music'
 import ListMusic from '@/components/Layout/ListMusic'
 import {useEffect, useState} from 'react'
-import {getAllMusic} from '@/services/music.service'
+import {getAllTrending} from '@/services/music.service'
 
 const Trend = () => {
-    const [listSong, setListSong] = useState<IMusic[]>()
+    const [listSong, setListSong] = useState<IMusic[]>([])
+
     useEffect(() => {
-        getAllMusic().then((res) => {
-            setListSong(res.element)
+        getAllTrending().then((res) => {
+            const list = res.element.map((song) => song.media)
+            setListSong(list)
         })
     }, [])
 
