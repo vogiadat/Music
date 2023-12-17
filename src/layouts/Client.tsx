@@ -3,7 +3,7 @@ import {Outlet, Link, useLocation} from 'react-router-dom'
 import {CLIENT_TOKEN, endPoint} from '@/utils/constant'
 import {useEffect, useState} from 'react'
 import Sidebar from '@/components/Client/Sidebar'
-import {Search, Bell, Settings, Menu, ChevronDown, User} from 'lucide-react'
+import {Search, Menu, ChevronDown, User, CheckCircle} from 'lucide-react'
 import {errorValue} from '../utils/constant'
 import {HoverCard, HoverCardContent} from '@radix-ui/react-hover-card'
 import {HoverCardTrigger} from '@/components/ui/hover-card'
@@ -18,7 +18,9 @@ import {authLogin, logout} from '@/features/authSlice'
 import {useToast} from '@/components/ui/use-toast'
 import {getMyFavor} from '@/services/favor.service'
 import {list} from '@/features/favorSlice'
-import {getMe} from '@/services/user.service'
+import {buytPremium, getMe} from '@/services/user.service'
+import {addHistory} from '@/services/history.service'
+import {find} from '@/features/musicSlice'
 
 const navbarList = [
     {
@@ -40,7 +42,9 @@ const Client = () => {
     const dispatch = useAppDispatch()
     const {user} = useAppSelector((state) => state.auth)
     const {pathname} = useLocation()
+    const {music} = useAppSelector((state) => state.music)
     const [isLogin, setIsLogin] = useState(true)
+    const [search, setSearch] = useState('')
 
     const handleLogin = () => {
         setIsLogin(!isLogin)
@@ -57,6 +61,16 @@ const Client = () => {
         }
     }
 
+    const handlePremium = async () => {
+        await buytPremium().then((res) => {
+            window.location.href = res.element
+        })
+    }
+
+    const handleSearch = () => {
+        dispatch(find(search))
+    }
+
     useEffect(() => {
         const token = localStorage.getItem(CLIENT_TOKEN)
         getMe()
@@ -69,6 +83,7 @@ const Client = () => {
     }, [])
 
     useEffect(() => {
+        if (music) addHistory(music.id)
         getMyFavor().then((res) => {
             dispatch(list(res.element.rows))
         })
@@ -102,32 +117,39 @@ const Client = () => {
                             <Menu />
                         </div>
                         <div className='md:col-span-6 col-span-8'>
-                            <div className='md:w-3/5 mx-auto relative'>
-                                <input
-                                    type='text'
-                                    name=''
-                                    id=''
-                                    className='bg-background w-full px-3 py-2 rounded-xl placeholder-shown:pl-10 placeholder:text-sm'
-                                    placeholder='Type your search here...'
-                                />
-                                <button
-                                    type='submit'
-                                    className='opacity-40 hover:text-secondary hover:opacity-60 transition-colors duration-150 ease-in-out'
-                                >
-                                    <Search className='absolute inset-y-2 right-6' />
-                                </button>
-                            </div>
+                            {(pathname === endPoint.music ||
+                                pathname === endPoint.trend ||
+                                pathname === endPoint.artist) && (
+                                <div className='md:w-3/5 mx-auto relative'>
+                                    <input
+                                        type='text'
+                                        name=''
+                                        id=''
+                                        value={search}
+                                        onChange={(e) => setSearch(e.target.value)}
+                                        className='bg-background w-full px-3 py-2 rounded-xl placeholder-shown:pl-10 placeholder:text-sm'
+                                        placeholder='Type your search here...'
+                                    />
+                                    <button
+                                        type='button'
+                                        onClick={handleSearch}
+                                        className='opacity-40 hover:text-secondary hover:opacity-60 transition-colors duration-150 ease-in-out'
+                                    >
+                                        <Search className='absolute inset-y-2 right-6' />
+                                    </button>
+                                </div>
+                            )}
                         </div>
                         <div className='col-span-3'>
                             <div className='flex md:mr-20 md:justify-end justify-around'>
-                                <ul className='flex items-center md:ml-4'>
+                                {/* <ul className='flex items-center md:ml-4'>
                                     <li>
                                         <Bell />
                                     </li>
                                     <li className='md:ml-4 md:block hidden'>
                                         <Settings />
                                     </li>
-                                </ul>
+                                </ul> */}
                                 <div className='flex items-center md:-my-1 md:ml-4'>
                                     {user ?
                                         <HoverCard>
@@ -145,14 +167,29 @@ const Client = () => {
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div className='flex hover:text-secondary hover:cursor-pointer'>
-                                                    <span className='ml-4 md:block hidden'>
-                                                        {formatName(user.firstName, user.lastName)}
+                                                    <span className='mx-2 md:flex md:items-center gap-1 hidden'>
+                                                        <span>{formatName(user.firstName, user.lastName)}</span>
+                                                        <span>
+                                                            {user?.isPremium ?
+                                                                <span className='text-secondary'>
+                                                                    <CheckCircle size={16} strokeWidth={3} />
+                                                                </span>
+                                                            :   <></>}
+                                                        </span>
                                                     </span>
                                                     <ChevronDown />
                                                 </div>
                                             </HoverCardTrigger>
                                             <HoverCardContent className='ml-16 mt-2 bg-zinc-800 w-32 rounded-lg p-2'>
-                                                <button className='hover:text-secondary px-2' onClick={handleLogout}>
+                                                {!user.isPremium && (
+                                                    <button
+                                                        className='hover:text-secondary p-2'
+                                                        onClick={handlePremium}
+                                                    >
+                                                        Buy Premium
+                                                    </button>
+                                                )}
+                                                <button className='hover:text-secondary p-2' onClick={handleLogout}>
                                                     Logout
                                                 </button>
                                             </HoverCardContent>

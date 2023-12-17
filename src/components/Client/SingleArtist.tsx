@@ -1,39 +1,30 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import Content from '../Layout/Content'
-import {IAlbum, IMusic} from '@/types/music'
+import {IMusic} from '@/types/music'
 import {IContent} from '@/types/content'
-import {getAllMusic} from '@/services/music.service'
-import {getAllArtist} from '@/services/user.service'
+import {getMusicByArtist} from '@/services/music.service'
+import {useLocation} from 'react-router-dom'
 
-const data: IAlbum = {
-    id: '1',
-    name: 'Ai Cũng Phải Bắt Đầu Từ Đâu Đó',
-    authorId: 'artist1',
-    desc: 'New album',
-    image: 'https://i.scdn.co/image/ab67616d0000b2738a063486be97d863207e1ca4',
-    medias: [
-        {
-            id: '1',
-            name: 'Exit Sign',
-            desc: '',
-            image: '',
-            src: '',
-            authorId: 'artist1',
-            isPremium: true,
-        },
-    ],
+interface Music {
+    index: number
+    song: IMusic
 }
 
 const SingleArtist = () => {
-    const [listSong, setListSong] = useState<IMusic[]>([])
+    const [data, setData] = useState<Music[]>([])
     const [content, setContent] = useState<IContent>({page: 'ARTIST', title: '', subtitle: '', image: ''})
+    const {pathname} = useLocation()
+    const artistId = pathname.split('/artist/').at(1) || ''
 
     useEffect(() => {
-        // getSin
-        getAllMusic().then((res) => {
-            setListSong(res.element)
+        getMusicByArtist(artistId).then((res) => {
+            setData(
+                res.element.map((song, index) => {
+                    return {index, song}
+                }),
+            )
         })
-    }, [])
+    }, [artistId])
 
     return (
         <>

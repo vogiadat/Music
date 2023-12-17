@@ -4,13 +4,12 @@ import {useEffect, useState} from 'react'
 import {getAllMusic} from '@/services/music.service'
 
 const Music = () => {
-    const [listSong, setListSong] = useState<IMusic[]>()
+    const [listSong, setListSong] = useState<IMusic[]>([])
     useEffect(() => {
         getAllMusic().then((res) => {
-            setListSong(res.element)
+            return setListSong(res.element)
         })
     }, [])
-    // console.log(listSong)
 
     return (
         <>

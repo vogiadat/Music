@@ -1,5 +1,5 @@
 import {History} from 'lucide-react'
-import {IMusic, IPlaylist} from '../types/music'
+import {IMusic} from '../types/music'
 import {useEffect, useState} from 'react'
 import {getHistory} from '@/services/history.service'
 import {useAppSelector} from '@/app/hook'
@@ -13,15 +13,15 @@ const Recent = () => {
 
     useEffect(() => {
         getHistory().then((res) => {
-            setHistory(res.element.rows)
+            setHistory(res.element.rows.map((song) => song.media))
         })
     }, [])
 
     if (user) {
         return (
             <>
-                <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
-                    {history ?
+                {!history ?
+                    <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                         <div className='grid gap-3 text-center'>
                             <History size={80} className='mx-auto' />
                             <b className='text-4xl font-bold'>Let’s find new song</b>
@@ -33,11 +33,18 @@ const Recent = () => {
                                 Find Song
                             </Link>
                         </div>
-                    :   <>
-                            <ListMusic listSong={history} />
-                        </>
-                    }
-                </div>
+                    </div>
+                :   <>
+                        <div className='ml-6'>
+                            <div>
+                                <b className='text-4xl font-extrabold'>History</b>
+                            </div>
+                            <div className={`w-full h-[850px] overflow-y-scroll`}>
+                                <ListMusic listSong={history} />
+                            </div>
+                        </div>
+                    </>
+                }
             </>
         )
     } else {

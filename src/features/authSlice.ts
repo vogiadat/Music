@@ -1,5 +1,5 @@
 // import {useToast} from '@/components/ui/use-toast'
-import {Login} from '@/services/auth.service'
+import {Login, Register} from '@/services/auth.service'
 import {CLIENT_TOKEN} from '@/utils/constant'
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {getMe} from '../services/user.service'
@@ -53,4 +53,18 @@ export const login = createAsyncThunk('auth/loginAsync', async ({email, password
     } catch (error) {
         console.log(error)
     }
+})
+
+export const register = createAsyncThunk('auth/registerAsync', async ({email, password}: TUser, thunkApi) => {
+    const params = {email, password}
+    await Register(params).then(async () => {
+        const {accessToken} = await Login(params)
+        localStorage.setItem(CLIENT_TOKEN, accessToken)
+        try {
+            const {element} = await getMe()
+            thunkApi.dispatch(authLogin({accessToken, element}))
+        } catch (error) {
+            console.log(error)
+        }
+    })
 })

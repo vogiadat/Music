@@ -1,4 +1,4 @@
-import {formatListened, formatName} from '@/hooks/functions'
+import {formatName} from '@/hooks/functions'
 import {getAllArtist} from '@/services/user.service'
 import {IUser} from '@/types/user'
 import {endPoint, errorValue} from '@/utils/constant'
@@ -37,7 +37,7 @@ const Artist = () => {
                                     </div>
                                     <div className='-mt-2 text-center'>
                                         <b className='text-xl'>{formatName(artist.firstName, artist.lastName)}</b>
-                                        <p className='opacity-40'>{formatListened(artist?.listen || 0)} Plays</p>
+                                        {/* <p className='opacity-40'>{formatListened(artist?.listen || 0)} Plays</p> */}
                                     </div>
                                 </div>
                             </Link>

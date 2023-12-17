@@ -1,7 +1,60 @@
-import React from 'react'
+import {useAppDispatch} from '@/app/hook'
+import {setListSong} from '@/features/musicSlice'
+import {getAllAlbums} from '@/services/music.service'
+import {IAlbum} from '@/types/music'
+import {endPoint, errorValue} from '@/utils/constant'
+import {useEffect, useState} from 'react'
+import {Link} from 'react-router-dom'
 
 const Albums = () => {
-    return <div>Albums</div>
+    const dispatch = useAppDispatch()
+    const [listAlbum, setListAlbum] = useState<IAlbum[]>([])
+    useEffect(() => {
+        getAllAlbums().then((res) => setListAlbum(res.element))
+    }, [])
+
+    const handleAlbum = (album: IAlbum) => {
+        dispatch(setListSong(album))
+    }
+
+    return (
+        <>
+            <div>
+                <div className='ml-6'>
+                    <b className='text-4xl font-extrabold'>Artist</b>
+                </div>
+                <div className={`w-full h-[850px] overflow-y-scroll`}>
+                    <div className='m-10 mx-20 grid grid-cols-5 gap-14'>
+                        {listAlbum &&
+                            listAlbum.map((album) => (
+                                <Link
+                                    to={endPoint.albums.concat(`/${album.id}`)}
+                                    key={album.id}
+                                    onClick={() => handleAlbum(album)}
+                                >
+                                    <div className='bg-background rounded-xl h-80'>
+                                        <div className='p-6 mx-auto'>
+                                            <img
+                                                src={album.image}
+                                                className='rounded-xl h-52 overflow-hidden object-cover'
+                                                onError={({currentTarget}) => {
+                                                    currentTarget.onerror = null // prevents looping
+                                                    currentTarget.src = errorValue.image
+                                                }}
+                                            />
+                                        </div>
+                                        <div className='-mt-2 text-center'>
+                                            <b className='text-xl'>{album.name}</b>
+                                            <p className='opacity-40'>{album.medias?.length} songs</p>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                    </div>
+                </div>
+            </div>
+        </>
+    )
 }
 
 export default Albums

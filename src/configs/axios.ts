@@ -3,9 +3,6 @@ import {CLIENT_TOKEN} from '@/utils/constant'
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API,
-    headers: {
-        'Content-Type': 'application/json',
-    },
 })
 
 api.interceptors.request.use(

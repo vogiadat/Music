@@ -1,20 +1,75 @@
 import {MoreHorizontal} from 'lucide-react'
 import {IMusic} from '../../types/music'
-import {useDispatch} from 'react-redux'
 import {currentSong} from '@/features/musicSlice'
-import {errorValue} from '@/utils/constant'
-import {useAppSelector} from '@/app/hook'
+import {endPoint, errorValue} from '@/utils/constant'
+import {useAppDispatch, useAppSelector} from '@/app/hook'
+import {useToast} from '../ui/use-toast'
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
+import {useLinkClickHandler, useNavigate} from 'react-router-dom'
 
 type Props = {
     listSong: IMusic[]
 }
 
 const ListMusic = ({listSong}: Props) => {
-    const dispatch = useDispatch()
+    const {toast} = useToast()
     const {music} = useAppSelector((state) => state.music)
+    const {user} = useAppSelector((state) => state.auth)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     const handlePlayMusic = async (song: IMusic) => {
+        if (!user && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need login to listen this music',
+            })
+        if (!user?.isPremium && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need buy premium to listen this music',
+            })
         dispatch(currentSong({song, listSong}))
+    }
+
+    const handleDownload = async (song: IMusic) => {
+        const audioUrl = song.src
+        if (!user && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need login to download this music',
+            })
+        if (!user?.isPremium && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need buy premium to download this music',
+            })
+
+        try {
+            const response = await fetch(audioUrl)
+            const blob = await response.blob()
+
+            const blobUrl = URL.createObjectURL(blob)
+
+            const link = document.createElement('a')
+            link.href = blobUrl
+            link.download = song.name.concat('.mp3')
+            link.target = '_blank'
+            document.body.appendChild(link)
+            link.click()
+
+            document.body.removeChild(link)
+
+            URL.revokeObjectURL(blobUrl)
+
+            navigate(endPoint.download.concat(`/${song.id}`))
+        } catch (error) {
+            console.error('Error downloading audio:', error)
+        }
     }
 
     return (
@@ -51,7 +106,16 @@ const ListMusic = ({listSong}: Props) => {
                                 </div>
                                 <div className='col-span-4'>{song.album?.name}</div>
                                 <div className='col-span-1 flex items-center'>
-                                    <MoreHorizontal size={28} />
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                            <MoreHorizontal size={28} />
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                            <DropdownMenuItem onClick={() => handleDownload(song)}>
+                                                Download
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             </li>
                         )

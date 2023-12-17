@@ -24,6 +24,15 @@ export interface IMusic {
     album?: IAlbum
 }
 
+export interface IDataUpload {
+    name: string
+    src: string
+    image: string
+    desc: string
+    isPremium: boolean
+    albumId?: string
+}
+
 export interface IPlaylist {
     rows: IMusic[]
     total: number
@@ -38,4 +47,9 @@ export interface IFavor {
     mediaId: string
     createAt: string
     updateAt: string
+}
+
+export interface Music {
+    index: number
+    song: IMusic
 }

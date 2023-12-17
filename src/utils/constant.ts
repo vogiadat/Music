@@ -6,7 +6,7 @@ export const endPoint = {
     home: host.concat(''),
     favor: host.concat('favourite'),
     recent: host.concat('recent'),
-    albums: host.concat('albums'),
+    albums: host.concat('album'),
     download: host.concat('download'),
     upload: host.concat('upload'),
     music: host.concat('music'),

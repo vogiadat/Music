@@ -1,4 +1,5 @@
 import * as React from 'react'
+import {ArrowUpDown, MoreHorizontal} from 'lucide-react'
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -13,32 +14,21 @@ import {
 } from '@tanstack/react-table'
 
 import {Button} from '@/components/ui/button'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table'
-import {ArrowUpDown, MoreHorizontal} from 'lucide-react'
-import {IMusic} from '../../types/music'
+
+import {IMusic, Music} from '@/types/music'
+import {useAppDispatch, useAppSelector} from '@/app/hook'
+import {currentSong} from '@/features/musicSlice'
 import {formatName} from '@/hooks/functions'
 import {errorValue} from '@/utils/constant'
-import {useAppDispatch, useAppSelector} from '@/app/hook'
-import {delFavor} from '@/features/favorSlice'
-import {currentSong} from '@/features/musicSlice'
+import {useToast} from '../ui/use-toast'
 
 type Props = {
     data: Music[]
 }
-interface Music {
-    index: number
-    song: IMusic
-}
 
-export const columns: ColumnDef<Music>[] = [
+const columns: ColumnDef<Music>[] = [
     {
         accessorKey: 'index',
         header: '',
@@ -83,10 +73,7 @@ export const columns: ColumnDef<Music>[] = [
     {
         id: 'actions',
         header: () => <div className=''>#</div>,
-        cell: ({row}) => {
-            const songId = row.getValue('song')?.id
-            const handleFavor = () => {}
-
+        cell: () => {
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild className='-mr-20 '>
@@ -96,7 +83,7 @@ export const columns: ColumnDef<Music>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align='end'>
-                        <DropdownMenuItem onClick={handleFavor}>Remove From Favorite</DropdownMenuItem>
+                        <DropdownMenuItem>Remove From Favorite</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
@@ -105,12 +92,18 @@ export const columns: ColumnDef<Music>[] = [
 ]
 
 const TableMusic = ({data}: Props) => {
-    // const {listFavor} = useAppSelector((state) => state.favor)
     const dispatch = useAppDispatch()
+    const {toast} = useToast()
+    const {user} = useAppSelector((state) => state.auth)
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [listSong, setListSong] = React.useState<IMusic[]>([])
+
+    React.useEffect(() => {
+        setListSong(data.map((value) => value.song))
+    }, [data])
 
     const table = useReactTable({
         data,
@@ -130,6 +123,22 @@ const TableMusic = ({data}: Props) => {
             rowSelection,
         },
     })
+
+    const handleCurrentSong = (song: IMusic) => {
+        if (!user && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need login to listen this music',
+            })
+        if (!user?.isPremium && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need buy premium to listen this music',
+            })
+        dispatch(currentSong({song, listSong}))
+    }
 
     return (
         <div className='w-full'>
@@ -157,7 +166,7 @@ const TableMusic = ({data}: Props) => {
                                     key={row.id}
                                     data-state={row.getIsSelected() && 'selected'}
                                     className='hover:bg-secondary border-none'
-                                    onClick={() => console.log(row.getValue('song'))}
+                                    onClick={() => handleCurrentSong(row.getValue('song'))}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

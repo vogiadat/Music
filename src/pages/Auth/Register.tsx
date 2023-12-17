@@ -9,24 +9,34 @@ import {Separator} from '@/components/Layout/UI'
 import GoogleIcon from '@/assets/imgs/google.png'
 import {DialogContent} from '@/components/ui/dialog'
 import {MouseEventHandler} from 'react'
+import {useAppDispatch} from '@/app/hook'
+import {useToast} from '@/components/ui/use-toast'
+import {register} from '@/features/authSlice'
 
-const formSchema = z.object({
-    email: z.string().min(1, {message: 'Email is required!!'}).email({message: 'Email/Password is invaild'}),
-    password: z
-        .string()
-        .min(1, {message: 'Password is required!!'})
-        .min(4, {message: 'Password must be at least 4 characters.'}),
-    rePassword: z
-        .string()
-        .min(1, {message: 'Request Password is required!!'})
-        .min(4, {message: 'Request Password must be at least 4 characters.'}),
-})
+const formSchema = z
+    .object({
+        email: z.string().min(1, {message: 'Email is required!!'}).email({message: 'Email/Password is invaild'}),
+        password: z
+            .string()
+            .min(1, {message: 'Password is required!!'})
+            .min(4, {message: 'Password must be at least 4 characters.'}),
+        rePassword: z
+            .string()
+            .min(1, {message: 'Request Password is required!!'})
+            .min(4, {message: 'Request Password must be at least 4 characters.'}),
+    })
+    .refine((data) => data.password === data.rePassword, {
+        message: "Passwords don't match",
+        path: ['rePassword'],
+    })
 
 interface Props {
     handleModal: MouseEventHandler
 }
 
 const Register = ({handleModal}: Props) => {
+    const {toast} = useToast()
+    const dispatch = useAppDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,7 +46,24 @@ const Register = ({handleModal}: Props) => {
         },
     })
 
-    const onSubmit = () => {}
+    const onSubmit = async () => {
+        const {email, password} = form.getValues()
+        const res = await dispatch(register({email, password}))
+        const msg = res?.error?.message
+        if (msg) {
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: `${msg}`,
+            })
+        } else {
+            toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Register success`,
+            })
+        }
+    }
 
     return (
         <>

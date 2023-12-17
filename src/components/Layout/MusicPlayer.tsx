@@ -7,12 +7,11 @@ import {useToast} from '../ui/use-toast'
 import {addFavor, delFavor} from '@/features/favorSlice'
 
 const MusicPlayer = () => {
-    // date
     const {toast} = useToast()
-    const dispatch = useAppDispatch()
     const {user} = useAppSelector((state) => state.auth)
     const {listFavor} = useAppSelector((state) => state.favor)
     const {music, listMusic} = useAppSelector((state) => state.music)
+    const dispatch = useAppDispatch()
 
     // ref
     const audio = useRef<HTMLAudioElement>(null)
