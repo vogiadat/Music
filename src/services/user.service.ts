@@ -1,5 +1,5 @@
 import api, {ResponseSuccess} from '@/configs/axios'
-import {IUser} from '@/types/user'
+import {IProfile, IUser} from '@/types/user'
 
 export const getMe = async () => {
     const res = await api.get<ResponseSuccess<IUser>>('/user/me')
@@ -13,5 +13,10 @@ export const getAllArtist = async () => {
 
 export const buytPremium = async () => {
     const res = await api.post<ResponseSuccess<string>>('/payment')
+    return res.data
+}
+
+export const updateProfile = async (id: string, data: IProfile) => {
+    const res = await api.patch(`/user/${id}`, data)
     return res.data
 }

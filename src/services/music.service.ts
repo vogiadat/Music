@@ -1,8 +1,8 @@
 import api, {ResponseSuccess} from '@/configs/axios'
 import {IAlbum, IDataUpload, IFavor, IMusic} from '@/types/music'
 
-export const getAllMusic = async () => {
-    const res = await api.get<ResponseSuccess<IMusic[]>>('/media')
+export const getAllMusic = async (search: string) => {
+    const res = await api.get<ResponseSuccess<IMusic[]>>(search ? `/media?search=${search}` : '/media')
     return res.data
 }
 

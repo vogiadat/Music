@@ -166,7 +166,7 @@ const Upload = () => {
                                             <Input
                                                 id='song'
                                                 type='file'
-                                                onChange={(e) => {
+                                                onChange={async (e) => {
                                                     if (e.target.files?.length) setFile(e.target.files[0])
                                                 }}
                                                 className='bg-white text-background'

@@ -54,18 +54,20 @@ const Sidebar = () => {
                     return (
                         <div className='md:flex md:flex-col' key={menu.title}>
                             <div>
-                                <div className='uppercase font-extrabold md:m-4 md:ml-20 md:text-2xl text-base'>
+                                <div className='uppercase font-extrabold m-4 max-2xl:ml-16 max-2xl:text-xl text-2xl ml-20'>
                                     {menu.title}
                                 </div>
                                 <ul>
                                     {menu.list.map((item) => (
                                         <li key={item.title}>
                                             <Link
-                                                className='hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out md:flex md:items-center md:text-xl md:pl-16 md:py-3'
+                                                className='hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out flex items-center text-xl pl-12 py-3 max-lg:text-base max-2xl:py-2'
                                                 to={item.slug}
                                             >
                                                 {item.icon}
-                                                <span className='ml-6 font-medium capitalize'>{item.title}</span>
+                                                <span className='ml-6 max-2xl:ml-2 font-medium capitalize'>
+                                                    {item.title}
+                                                </span>
                                             </Link>
                                         </li>
                                     ))}

@@ -64,9 +64,9 @@ const Player = ({
 
     return (
         <>
-            <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32'>
-                <div className='col-span-3 flex justify-evenly gap-2 items-center mx-5'>
-                    <div className='h-28 w-28 rounded-lg overflow-hidden shadow shadow-gray-900'>
+            <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32 max-2xl:h-20'>
+                <div className='col-span-3 flex justify-evenly gap-2 items-center max-2xl:mb-3 mx-5'>
+                    <div className='h-28 w-28 max-2xl:w-14 max-2xl:h-14 rounded-lg overflow-hidden shadow shadow-gray-900'>
                         <img
                             src={song.image}
                             alt=''
@@ -95,27 +95,39 @@ const Player = ({
                 <div className='col-span-6'>
                     <div className='grid w-5/6 mx-auto'>
                         <div className='row'>
-                            <ul className='flex w-2/5 mx-auto justify-around items-center'>
+                            <ul className='flex w-2/5 mx-auto justify-around items-center max-2xl:h-14'>
                                 <li>
-                                    <button className={isLoop ? 'text-secondary' : 'text-white'} onClick={handleLoop}>
-                                        <Repeat2 />
+                                    <button
+                                        className={`${isLoop ? 'text-secondary' : 'text-white'}`}
+                                        onClick={handleLoop}
+                                    >
+                                        <Repeat2 className='hover:text-secondary max-2xl:h-5 max-2xl:w-5' />
                                     </button>
                                 </li>
                                 <li>
                                     <button onClick={handlePrev}>
-                                        <SkipBack className='hover:text-secondary' />
+                                        <SkipBack className='hover:text-secondary max-2xl:h-5 max-2xl:w-5' />
                                     </button>
                                 </li>
                                 <li className='w-20 h-20 flex items-center justify-center'>
                                     <button type='button' onClick={toggleMusic}>
                                         {!isPlay ?
-                                            <PlayCircle size={60} strokeWidth={1} />
-                                        :   <PauseCircle size={60} strokeWidth={1} className='stroke-secondary' />}
+                                            <PlayCircle
+                                                className='max-2xl:h-10 max-2xl:w-10'
+                                                size={60}
+                                                strokeWidth={1}
+                                            />
+                                        :   <PauseCircle
+                                                size={60}
+                                                strokeWidth={1}
+                                                className='stroke-secondary max-2xl:h-10 max-2xl:w-10'
+                                            />
+                                        }
                                     </button>
                                 </li>
                                 <li>
                                     <button onClick={handleNext}>
-                                        <SkipForward className='hover:text-secondary' />
+                                        <SkipForward className='hover:text-secondary max-2xl:h-5 max-2xl:w-5' />
                                     </button>
                                 </li>
                                 <li>
@@ -123,12 +135,12 @@ const Player = ({
                                         className={isShuffle ? 'text-secondary' : 'text-white'}
                                         onClick={handleShuffle}
                                     >
-                                        <Shuffle />
+                                        <Shuffle className='hover:text-secondary max-2xl:h-5 max-2xl:w-5' />
                                     </button>
                                 </li>
                             </ul>
                         </div>
-                        <div className='row w-full mt-2'>
+                        <div className='row w-full mt-2 max-2xl:mt-0'>
                             <Slider value={[currentTime]} min={0} max={100} step={1} onValueChange={handleProgress} />
                         </div>
                     </div>

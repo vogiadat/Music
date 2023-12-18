@@ -24,5 +24,10 @@ export const formatTime = (seconds: number): string => {
     return `${formattedMinutes}:${formattedSeconds}`
 }
 
-export const formatName = (firstName: string, lastName: string) =>
-    firstName == '' && lastName == '' ? 'Not found' : firstName + '' + lastName
+export const formatName = (firstName: string, lastName: string) => {
+    let fullName = firstName + ' ' + lastName
+    if (!firstName) fullName = lastName
+    if (!lastName) fullName = firstName
+    if (!fullName) fullName = 'User'
+    return fullName
+}

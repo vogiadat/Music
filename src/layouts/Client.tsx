@@ -21,6 +21,7 @@ import {list} from '@/features/favorSlice'
 import {buytPremium, getMe} from '@/services/user.service'
 import {addHistory} from '@/services/history.service'
 import {find} from '@/features/musicSlice'
+import Profile from '@/components/Client/Profile'
 
 const navbarList = [
     {
@@ -45,7 +46,6 @@ const Client = () => {
     const {music} = useAppSelector((state) => state.music)
     const [isLogin, setIsLogin] = useState(true)
     const [search, setSearch] = useState('')
-
     const handleLogin = () => {
         setIsLogin(!isLogin)
     }
@@ -80,14 +80,11 @@ const Client = () => {
             .catch(() => {
                 dispatch(logout())
             })
-    }, [])
-
-    useEffect(() => {
         if (music) addHistory(music.id)
         getMyFavor().then((res) => {
             dispatch(list(res.element.rows))
         })
-    }, [])
+    }, [music])
 
     return (
         <>
@@ -105,7 +102,7 @@ const Client = () => {
                                             key={item.title}
                                             className={`${
                                                 isActice ? 'text-secondary' : 'text-white'
-                                            } hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out`}
+                                            } hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out max-2xl:text-sm`}
                                         >
                                             <Link to={item.slug}>{item.title}</Link>
                                         </li>
@@ -156,7 +153,8 @@ const Client = () => {
                                             <HoverCardTrigger className='flex items-center md:-my-1 md:ml-4'>
                                                 <Avatar>
                                                     <AvatarImage
-                                                        src={user.avatar}
+                                                        src={user.avatar || ''}
+                                                        alt=''
                                                         onError={({currentTarget}) => {
                                                             currentTarget.onerror = null // prevents looping
                                                             currentTarget.src = errorValue.image
@@ -166,29 +164,26 @@ const Client = () => {
                                                         {user.firstName}
                                                     </AvatarFallback>
                                                 </Avatar>
-                                                <div className='flex hover:text-secondary hover:cursor-pointer'>
-                                                    <span className='mx-2 md:flex md:items-center gap-1 hidden'>
-                                                        <span>{formatName(user.firstName, user.lastName)}</span>
-                                                        <span>
-                                                            {user?.isPremium ?
-                                                                <span className='text-secondary'>
-                                                                    <CheckCircle size={16} strokeWidth={3} />
+                                                <Dialog>
+                                                    <DialogTrigger>
+                                                        <div className='flex hover:text-secondary hover:cursor-pointer'>
+                                                            <span className='px-2 mx-auto md:flex md:items-center gap-1 hidden'>
+                                                                <span className='flex items-center gap-2 text-center truncate w-24'>
+                                                                    {formatName(user.firstName, user.lastName)}
+                                                                    {user?.isPremium ?
+                                                                        <span className='text-secondary'>
+                                                                            <CheckCircle size={16} strokeWidth={3} />
+                                                                        </span>
+                                                                    :   <></>}
                                                                 </span>
-                                                            :   <></>}
-                                                        </span>
-                                                    </span>
-                                                    <ChevronDown />
-                                                </div>
+                                                            </span>
+                                                            <ChevronDown />
+                                                        </div>
+                                                    </DialogTrigger>
+                                                    <Profile user={user} />
+                                                </Dialog>
                                             </HoverCardTrigger>
                                             <HoverCardContent className='ml-16 mt-2 bg-zinc-800 w-32 rounded-lg p-2'>
-                                                {!user.isPremium && (
-                                                    <button
-                                                        className='hover:text-secondary p-2'
-                                                        onClick={handlePremium}
-                                                    >
-                                                        Buy Premium
-                                                    </button>
-                                                )}
                                                 <button className='hover:text-secondary p-2' onClick={handleLogout}>
                                                     Logout
                                                 </button>

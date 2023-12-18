@@ -21,3 +21,12 @@ export interface IUser {
     roleCode: ERole
     role?: Role
 }
+
+export interface IProfile {
+    firstName: string
+    lastName: string
+    email: string
+    phone: string
+    avatar: string
+    isPremium: boolean
+}

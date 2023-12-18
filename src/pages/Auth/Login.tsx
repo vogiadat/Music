@@ -57,8 +57,8 @@ const Login = ({handleModal}: Props) => {
 
     return (
         <>
-            <DialogContent>
-                <div className='shadow bg-background text-white p-6 rounded-xl max-w-[450px] w-[450px]'>
+            <DialogContent className='w-fit'>
+                <div className='shadow bg-background text-white p-6 rounded-xl w-[450px] max-2xl:w-[350px]'>
                     <div className='font-bold text-3xl text-center uppercase'>Login</div>
                     <div>
                         <Form {...form}>
