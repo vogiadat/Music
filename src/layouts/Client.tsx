@@ -84,7 +84,8 @@ const Client = () => {
         getMyFavor().then((res) => {
             dispatch(list(res.element.rows))
         })
-    }, [music])
+        if (!search) dispatch(find(''))
+    }, [music, search])
 
     return (
         <>
