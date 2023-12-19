@@ -156,7 +156,7 @@ const Home = () => {
                                 See all
                             </Link>
                         </div>
-                        <div className='h-52 max-2xl:h-36 grid grid-flow-col'>
+                        <div className='h-52 max-2xl:h-36'>
                             <Slider {...settingAritist} className='w-full'>
                                 {listArtist &&
                                     listArtist.map((artist) => (
