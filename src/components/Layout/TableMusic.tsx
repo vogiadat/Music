@@ -20,10 +20,8 @@ import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/c
 import {IMusic, Music} from '@/types/music'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {currentSong} from '@/features/musicSlice'
-import {formatName} from '@/hooks/functions'
 import {errorValue} from '@/utils/constant'
 import {useToast} from '../ui/use-toast'
-import {ScrollArea} from '@radix-ui/react-scroll-area'
 
 type Props = {
     data: Music[]
@@ -47,7 +45,6 @@ const columns: ColumnDef<Music>[] = [
         },
         cell: ({row}) => {
             const music: IMusic = row.getValue('song')
-            console.log(music)
 
             return (
                 <div className='flex items-center gap-4 max-h-24 h-24'>

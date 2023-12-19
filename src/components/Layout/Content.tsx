@@ -28,7 +28,7 @@ const Content = ({data, content}: Props) => {
                 <div className='p-6 grid grid-cols-4 gap-10'>
                     <div className='col-span-1'>
                         <img
-                            src={content.image}
+                            src={content.image || ''}
                             alt={content.title}
                             onError={({currentTarget}) => {
                                 currentTarget.onerror = null // prevents looping

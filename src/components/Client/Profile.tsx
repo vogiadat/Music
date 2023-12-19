@@ -6,7 +6,6 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/
 import {Input} from '@/components/ui/input'
 import {Switch} from '@/components/ui/switch'
 import {DialogContent} from '@/components/ui/dialog'
-import {useAppDispatch} from '@/app/hook'
 import {useToast} from '@/components/ui/use-toast'
 import {IUser} from '@/types/user'
 import {buytPremium} from '@/services/user.service'
@@ -189,9 +188,11 @@ const Profile = ({user}: Props) => {
                                             <div className='grid w-full max-w-sm items-center gap-1.5'>
                                                 <Tabs defaultValue='imgInput' className='w-full'>
                                                     <FormLabel htmlFor='img'>Image</FormLabel>
-                                                    <TabsList>
-                                                        <TabsTrigger value='imgInput'>Link</TabsTrigger>
-                                                        <TabsTrigger value='imgFile'>
+                                                    <TabsList className='ml-5 rounded-3xl'>
+                                                        <TabsTrigger className='rounded-l-2xl' value='imgInput'>
+                                                            Link
+                                                        </TabsTrigger>
+                                                        <TabsTrigger className='rounded-r-2xl' value='imgFile'>
                                                             {isLoading ?
                                                                 <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                                                             :   <span>File</span>}
