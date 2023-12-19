@@ -6,7 +6,6 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/
 import {Input} from '@/components/ui/input'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Separator} from '@/components/Layout/UI'
-import GoogleIcon from '@/assets/imgs/google.png'
 import {DialogContent} from '@/components/ui/dialog'
 import {MouseEventHandler} from 'react'
 import {useAppDispatch} from '@/app/hook'
@@ -149,7 +148,7 @@ const Register = ({handleModal}: Props) => {
                             <Separator children={'or'} />
                             <div className='flex justify-center items-center gap-2'>
                                 <button>
-                                    <img src={GoogleIcon} className='w-10' alt='' />
+                                    <img src='/assets/imgs/google.png' className='w-10' alt='' />
                                 </button>
                             </div>
                             <Separator />
