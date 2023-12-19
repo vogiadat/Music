@@ -196,7 +196,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='h-full w-full m-5'>
-                    <img src='./src/assets/imgs/background.jpg' alt='' className='object-cover' />
+                    <img src='/assets/imgs/background.jpg' alt='' className='object-cover' />
                 </div>
             </div>
         </>

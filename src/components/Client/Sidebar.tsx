@@ -49,7 +49,7 @@ const Sidebar = () => {
     return (
         <>
             <div className='md:col-span-2 bg-sidebar border border-r md:block hidden'>
-                <img src='/src/assets/imgs/logo.png' alt='Logo' className='mx-auto mt-5' />
+                <img src='/assets/imgs/logo.png' alt='Logo' className='mx-auto mt-5' />
                 {sideMenu.map((menu) => {
                     return (
                         <div className='md:flex md:flex-col' key={menu.title}>
