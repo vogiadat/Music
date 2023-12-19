@@ -19,9 +19,8 @@ const Trend = () => {
                 <div>
                     <b className='text-4xl font-extrabold'>Trend</b>
                 </div>
-                <div className={`w-full h-[850px] mt-5 overflow-y-scroll`}>
+                <div className='w-full relative'>
                     <ListMusic listSong={listSong || []} />
-                    <div className='grid grid-flow-col py-2'></div>
                 </div>
             </div>
         </>

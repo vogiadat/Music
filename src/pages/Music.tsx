@@ -19,9 +19,7 @@ const Music = () => {
                 <div>
                     <b className='text-4xl font-extrabold'>Music</b>
                 </div>
-                <div className={`w-full h-[850px] overflow-y-scroll`}>
-                    {listSong && <ListMusic listSong={listSong} />}
-                </div>
+                <div className='w-full relative'>{listSong && <ListMusic listSong={listSong} />}</div>
             </div>
         </>
     )

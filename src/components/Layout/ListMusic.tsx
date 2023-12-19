@@ -5,7 +5,8 @@ import {endPoint, errorValue} from '@/utils/constant'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {useToast} from '../ui/use-toast'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
-import {useLinkClickHandler, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
+import {ScrollArea} from '@/components/ui/scroll-area'
 
 type Props = {
     listSong: IMusic[]
@@ -73,56 +74,54 @@ const ListMusic = ({listSong}: Props) => {
     }
 
     return (
-        <>
-            <div>
-                <ul className={`my-10 ${music ? 'mb-40' : ''}`}>
-                    {listSong.map((song: IMusic, index: number) => {
-                        return (
-                            <li
-                                key={song.id}
-                                className='grid grid-cols-12 p-2 rounded-2xl my-4 hover:cursor-pointer bg-neutral-800 bg-opacity-40 hover:bg-secondary hover:bg-opacity-80 transition-colors duration-150 ease-in-out'
-                                onClick={() => handlePlayMusic(song)}
-                            >
-                                <div className='col-span-1 flex items-center text-xl px-2 font-semibold'>
-                                    {index + 1}
+        <ul className={`${music ? 'h-4/6' : 'h-5/6'} mt-4 fixed w-4/5`}>
+            <ScrollArea className='h-full'>
+                {listSong.map((song: IMusic, index: number) => {
+                    return (
+                        <li
+                            key={song.id}
+                            className='grid grid-cols-12 p-2 rounded-2xl my-4 hover:cursor-pointer bg-neutral-800 bg-opacity-40 hover:bg-secondary hover:bg-opacity-80 transition-colors duration-150 ease-in-out'
+                            onClick={() => handlePlayMusic(song)}
+                        >
+                            <div className='col-span-1 flex items-center text-xl px-2 font-semibold'>{index + 1}</div>
+                            <div className='col-span-6 flex gap-6'>
+                                <div className='w-28 h-28 rounded-lg overflow-hidden'>
+                                    <img
+                                        src={song.image}
+                                        className='w-full h-full object-cover'
+                                        onError={({currentTarget}) => {
+                                            currentTarget.onerror = null // prevents looping
+                                            currentTarget.src = errorValue.image
+                                        }}
+                                    />
                                 </div>
-                                <div className='col-span-6 flex gap-6'>
-                                    <div className='w-28 h-28 rounded-lg overflow-hidden'>
-                                        <img
-                                            src={song.image}
-                                            className='object-cover'
-                                            onError={({currentTarget}) => {
-                                                currentTarget.onerror = null // prevents looping
-                                                currentTarget.src = errorValue.image
-                                            }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <b className='text-xl truncate capitalize'>{song.name}</b>
+                                <div>
+                                    <b className='text-xl truncate capitalize'>{song.name}</b>
+                                    {song.author && (
                                         <p className='opacity-60 text-base'>
                                             {song.author?.firstName || '' + song.author?.lastName || ''}
                                         </p>
-                                    </div>
+                                    )}
                                 </div>
-                                <div className='col-span-4'>{song.album?.name}</div>
-                                <div className='col-span-1 flex items-center'>
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger>
-                                            <MoreHorizontal size={28} />
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuItem onClick={() => handleDownload(song)}>
-                                                Download
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            </li>
-                        )
-                    })}
-                </ul>
-            </div>
-        </>
+                            </div>
+                            <div className='col-span-4'>{song.album?.name}</div>
+                            <div className='col-span-1 flex items-center'>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger>
+                                        <MoreHorizontal size={28} />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuItem onClick={() => handleDownload(song)}>
+                                            Download
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+                        </li>
+                    )
+                })}
+            </ScrollArea>
+        </ul>
     )
 }
 

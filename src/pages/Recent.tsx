@@ -1,5 +1,5 @@
 import {History} from 'lucide-react'
-import {IMusic} from '../types/music'
+import {IFavor, IMusic} from '../types/music'
 import {useEffect, useState} from 'react'
 import {getHistory} from '@/services/history.service'
 import {useAppSelector} from '@/app/hook'
@@ -12,8 +12,8 @@ const Recent = () => {
     const {user} = useAppSelector((state) => state.auth)
 
     useEffect(() => {
-        getHistory().then((res) => {
-            setHistory(res.element.rows.map((song) => song.media))
+        getHistory().then((data) => {
+            setHistory(data.rows.map((song: IFavor) => song.media))
         })
     }, [])
 

@@ -23,6 +23,7 @@ import {currentSong} from '@/features/musicSlice'
 import {formatName} from '@/hooks/functions'
 import {errorValue} from '@/utils/constant'
 import {useToast} from '../ui/use-toast'
+import {ScrollArea} from '@radix-ui/react-scroll-area'
 
 type Props = {
     data: Music[]
@@ -46,6 +47,7 @@ const columns: ColumnDef<Music>[] = [
         },
         cell: ({row}) => {
             const music: IMusic = row.getValue('song')
+            console.log(music)
 
             return (
                 <div className='flex items-center gap-4 max-h-24 h-24'>
@@ -61,10 +63,8 @@ const columns: ColumnDef<Music>[] = [
                         />
                     </div>
                     <div className='self-start'>
-                        <b className='text-lg font-semibold capitalize'>{music.name}</b>
-                        <p className='opacity-70'>
-                            {formatName(music.author?.firstName || '', music.author?.lastName || '')}
-                        </p>
+                        <b className='text-xl font-semibold capitalize'>{music.name}</b>
+                        {/* <p className='opacity-70'>{formatName(music.author?.firstName, music.author?.lastName)}</p> */}
                     </div>
                 </div>
             )
@@ -95,6 +95,7 @@ const TableMusic = ({data}: Props) => {
     const dispatch = useAppDispatch()
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
+    const {music} = useAppSelector((state) => state.music)
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -142,7 +143,7 @@ const TableMusic = ({data}: Props) => {
 
     return (
         <div className='w-full'>
-            <div className='rounded-md'>
+            <div className={`${music && 'max-2xl:mb-72 mb-32'} rounded-md`}>
                 <Table className=''>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -159,7 +160,7 @@ const TableMusic = ({data}: Props) => {
                             </TableRow>
                         ))}
                     </TableHeader>
-                    <TableBody>
+                    <TableBody className=''>
                         {table.getRowModel().rows?.length ?
                             table.getRowModel().rows.map((row) => (
                                 <TableRow

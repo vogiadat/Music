@@ -18,7 +18,7 @@ import {authLogin, logout} from '@/features/authSlice'
 import {useToast} from '@/components/ui/use-toast'
 import {getMyFavor} from '@/services/favor.service'
 import {list} from '@/features/favorSlice'
-import {buytPremium, getMe} from '@/services/user.service'
+import {getMe} from '@/services/user.service'
 import {addHistory} from '@/services/history.service'
 import {find} from '@/features/musicSlice'
 import Profile from '@/components/Client/Profile'
@@ -59,12 +59,6 @@ const Client = () => {
                 description: `Login success`,
             })
         }
-    }
-
-    const handlePremium = async () => {
-        await buytPremium().then((res) => {
-            window.location.href = res.element
-        })
     }
 
     const handleSearch = () => {

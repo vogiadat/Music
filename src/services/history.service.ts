@@ -1,8 +1,7 @@
-import api, {ResPaginationSuccess} from '@/configs/axios'
-import {IFavor} from '@/types/music'
+import api from '@/configs/axios'
 
 export const getHistory = async () => {
-    const res = await api.get<ResPaginationSuccess<IFavor[]>>('/history')
+    const res = await api.get('/history')
     return res.data
 }
 
