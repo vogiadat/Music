@@ -22,7 +22,7 @@ const Home = () => {
     const [listSong, setListSong] = useState<IMusic[]>([])
     const [listArtist, setListArtist] = useState<IUser[]>([])
     const settingSong = {
-        infinite: listSong.length < 3 ? false : true,
+        infinite: true,
         autoplaySpeed: 3000,
         autoplay: true,
         lazyload: true,
