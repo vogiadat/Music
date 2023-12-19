@@ -116,33 +116,31 @@ const Home = () => {
                                 </span>
                             </Link>
                         </div>
-                        <div className='grid grid-flow-col py-2'>
-                            {listSong && (
-                                <Slider {...settingSong} className='mx-2'>
-                                    {listSong.map((song: IMusic) => (
-                                        <div
-                                            key={song.id}
-                                            className='text-center hover:cursor-pointer w-full h-full'
-                                            onClick={() => handlePlayMusic(song)}
-                                        >
-                                            <div className='mx-auto w-32 h-32 max-2xl:w-24 max-2xl:h-24 max-2xl:mx-4 rounded-2xl overflow-hidden'>
-                                                <img
-                                                    src={song.image || ''}
-                                                    alt=''
-                                                    className='object-cover'
-                                                    onError={({currentTarget}) => {
-                                                        currentTarget.onerror = null // prevents looping
-                                                        currentTarget.src = errorValue.image
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className='w-40 max-2xl:w-24 truncate'>
-                                                <b className='text-lg truncate max-2xl:text-sm'>{song.name}</b>
-                                            </div>
+                            <div className='py-2'>
+                            <Slider {...settingSong} className='w-max -ml-1'>
+                                {listSong?.map((song: IMusic) => (
+                                    <div
+                                        key={song.id}
+                                        className='text-center hover:cursor-pointer w-full h-full'
+                                        onClick={() => handlePlayMusic(song)}
+                                    >
+                                        <div className='mx-auto w-32 h-32 max-2xl:w-24 max-2xl:h-24 max-2xl:mx-2 rounded-2xl overflow-hidden'>
+                                            <img
+                                                src={song.image || ''}
+                                                alt=''
+                                                className='object-cover w-max'
+                                                onError={({currentTarget}) => {
+                                                    currentTarget.onerror = null // prevents looping
+                                                    currentTarget.src = errorValue.image
+                                                }}
+                                            />
                                         </div>
-                                    ))}
-                                </Slider>
-                            )}
+                                        <div className='w-40 max-2xl:w-24 truncate'>
+                                            <b className='text-lg truncate max-2xl:text-sm'>{song.name}</b>
+                                        </div>
+                                    </div>
+                                ))}
+                            </Slider>
                         </div>
                     </div>
                     <div
