@@ -27,7 +27,12 @@ const SingleArtist = () => {
         })
         getAllArtist().then((res) => {
             const artist = res.element.find((artist) => artist.id === artistId)
-            setContent({...content, title: formatName(artist?.firstName, artist?.lastName), image: artist?.avatar})
+            if (artist)
+                setContent({
+                    ...content,
+                    title: formatName(artist.firstName, artist.lastName),
+                    image: artist.avatar,
+                })
         })
     }, [artistId, content])
 

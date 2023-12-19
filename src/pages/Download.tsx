@@ -12,9 +12,7 @@ const Download = () => {
     const [listSong, setListSong] = useState<IMusic[]>([])
 
     useEffect(() => {
-        getAllMusic().then((res) => {
-            setListSong(res.element)
-        })
+        getAllMusic('').then((res) => setListSong(res.element))
     }, [])
 
     return (

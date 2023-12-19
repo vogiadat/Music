@@ -51,7 +51,7 @@ export const login = createAsyncThunk('auth/loginAsync', async ({email, password
         const {element} = await getMe()
         thunkApi.dispatch(authLogin({accessToken, element}))
     } catch (error) {
-        console.log(error)
+        return thunkApi.rejectWithValue(error)
     }
 })
 
@@ -64,7 +64,7 @@ export const register = createAsyncThunk('auth/registerAsync', async ({email, pa
             const {element} = await getMe()
             thunkApi.dispatch(authLogin({accessToken, element}))
         } catch (error) {
-            console.log(error)
+            return thunkApi.rejectWithValue(error)
         }
     })
 })

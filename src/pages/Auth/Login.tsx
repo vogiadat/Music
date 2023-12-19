@@ -37,8 +37,8 @@ const Login = ({handleModal}: Props) => {
     })
 
     const onSubmit = async () => {
-        const res = await dispatch(login(form.getValues()))
-        const msg = res?.error?.message
+        const res = (await dispatch(login(form.getValues()))) as unknown
+        const msg = (res as {error: {message: string}})?.error?.message
 
         if (msg) {
             toast({

@@ -48,8 +48,8 @@ const Register = ({handleModal}: Props) => {
 
     const onSubmit = async () => {
         const {email, password} = form.getValues()
-        const res = await dispatch(register({email, password}))
-        const msg = res?.error?.message
+        const res = (await dispatch(register({email, password}))) as unknown
+        const msg = (res as {error: {message: string}})?.error?.message
         if (msg) {
             toast({
                 variant: 'destructive',

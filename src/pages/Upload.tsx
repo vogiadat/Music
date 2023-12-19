@@ -48,8 +48,8 @@ const Upload = () => {
         setIsLoading(true)
         let src = data.src,
             image = data.image
-        if (!src) src = await upload(file)
-        if (!image) image = await upload(img)
+        if (!src && file) src = await upload(file)
+        if (!image && img) image = await upload(img)
         const uploadData = {...data, src, image}
         return await createMusic(uploadData).then(() => {
             setIsLoading(false)
