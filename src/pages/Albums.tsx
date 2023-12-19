@@ -21,7 +21,7 @@ const Albums = () => {
         <>
             <div>
                 <div className='ml-6'>
-                    <b className='text-4xl font-extrabold'>Artist</b>
+                    <b className='text-4xl font-extrabold'>Albums</b>
                 </div>
                 <div className={`w-full h-[850px] overflow-y-scroll`}>
                     <div className='m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14'>
