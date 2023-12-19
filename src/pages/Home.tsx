@@ -122,7 +122,7 @@ const Home = () => {
                                     {listSong.map((song: IMusic) => (
                                         <div
                                             key={song.id}
-                                            className='text-center hover:cursor-pointer'
+                                            className='text-center hover:cursor-pointer w-full h-full'
                                             onClick={() => handlePlayMusic(song)}
                                         >
                                             <div className='mx-auto w-32 h-32 max-2xl:w-24 max-2xl:h-24 max-2xl:mx-4 rounded-2xl overflow-hidden'>
