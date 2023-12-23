@@ -20,7 +20,6 @@ const MusicPlayer = () => {
     const [initMusic, setInitMusic] = useState<IMusic | null>(music)
     const [isPlay, setIsPlay] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
-    const [duration, setDuration] = useState(0)
     const [volume, setVolume] = useState(100)
     const [isLoop, setIsLoop] = useState(false)
     const [isShuffle, setIsShuffle] = useState(false)
@@ -103,6 +102,7 @@ const MusicPlayer = () => {
     }
 
     useEffect(() => {
+        if (music) setInitMusic(music)
         if (!audio.current) return
         if (!isPlay) return audio.current.pause()
         const isPremium = initMusic?.isPremium || music?.isPremium
@@ -127,8 +127,7 @@ const MusicPlayer = () => {
         }
         audio.current.play()
         audio.current.volume = volume / 100
-        setDuration(audio.current.duration)
-    }, [isPlay, user, volume, currentTime, music, initMusic])
+    }, [toast, isPlay, user, volume, currentTime, music, initMusic])
 
     return (
         <>
@@ -149,7 +148,7 @@ const MusicPlayer = () => {
                         toggleMusic={toggleMusic}
                         handleNext={handleNextSong}
                         handlePrev={handlePrevSong}
-                        duration={duration}
+                        duration={audio.current?.duration || 0}
                         volume={volume}
                         handleVolume={handleVolume}
                         handleProgress={handleProgress}

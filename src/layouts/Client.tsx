@@ -25,15 +25,15 @@ import Profile from '@/components/Client/Profile'
 
 const navbarList = [
     {
-        title: 'Music',
+        title: 'Bài Hát',
         slug: endPoint.music,
     },
     {
-        title: 'artists',
+        title: 'Nghệ Sĩ',
         slug: endPoint.artist,
     },
     {
-        title: 'trend',
+        title: 'Thịnh Hành',
         slug: endPoint.trend,
     },
 ]

@@ -4,25 +4,25 @@ import {Link} from 'react-router-dom'
 
 const sideMenu = [
     {
-        title: 'menu',
+        title: 'Danh Mục',
         list: [
             {
-                title: 'Home',
+                title: 'Trang Chủ',
                 icon: <Home />,
                 slug: endPoint.home,
             },
             {
-                title: 'favourite',
+                title: 'Yêu Thích',
                 icon: <Heart />,
                 slug: endPoint.favor,
             },
         ],
     },
     {
-        title: 'library',
+        title: 'Thư Viện',
         list: [
             {
-                title: 'recent',
+                title: 'Lịch Sử',
                 icon: <History />,
                 slug: endPoint.recent,
             },
@@ -32,12 +32,12 @@ const sideMenu = [
                 slug: endPoint.albums,
             },
             {
-                title: 'Downloads',
+                title: 'Tải Nhạc',
                 icon: <Download />,
                 slug: endPoint.download,
             },
             {
-                title: 'Upload',
+                title: 'Đăng Tải',
                 icon: <Upload />,
                 slug: endPoint.upload,
             },

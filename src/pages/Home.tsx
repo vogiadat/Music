@@ -78,7 +78,7 @@ const Home = () => {
                 <div className='ml-6'>
                     <div className=''>
                         <div>
-                            <p className='opacity-80'>Trending</p>
+                            <p className='opacity-80'>Nổi Bật</p>
                             <b className='text-4xl font-extrabold'>{trend?.name || 'Godly'}</b>
                             <p className='opacity-80'>
                                 {formatName(trend?.author?.firstName || '', trend?.author?.lastName || '') ||
@@ -90,7 +90,7 @@ const Home = () => {
                                 className='flex bg-secondary px-3 rounded-xl mr-1 items-center hover:opacity-80'
                                 onClick={() => trend && handlePlayMusic(trend)}
                             >
-                                <span className='mr-2'>Play Now</span>
+                                <span className='mr-2'>Nghe Ngay</span>
                                 <Play />
                             </button>
                             <Link
@@ -109,14 +109,14 @@ const Home = () => {
                         }}
                     >
                         <div className='flex justify-between items-end mx-4 py-1'>
-                            <b className='text-lg max-2xl:text-base'>Billboard Topchart</b>
+                            <b className='text-lg max-2xl:text-base'>Thịnh Hành</b>
                             <Link to={endPoint.trend}>
                                 <span className='hover:cursor-pointer hover:text-secondary p-3 max-2xl:text-sm'>
-                                    See all
+                                    Xem thêm
                                 </span>
                             </Link>
                         </div>
-                            <div className='py-2'>
+                        <div className='py-2'>
                             <Slider {...settingSong} className='w-max -ml-1'>
                                 {listSong?.map((song: IMusic) => (
                                     <div
@@ -124,19 +124,21 @@ const Home = () => {
                                         className='text-center hover:cursor-pointer w-full h-full'
                                         onClick={() => handlePlayMusic(song)}
                                     >
-                                        <div className='mx-auto w-32 h-32 max-2xl:w-24 max-2xl:h-24 max-2xl:mx-2 rounded-2xl overflow-hidden'>
+                                        <div className='mx-5 w-32 h-32 max-2xl:w-24 max-2xl:h-24 max-2xl:mx-2 rounded-2xl overflow-hidden'>
                                             <img
                                                 src={song.image || ''}
                                                 alt=''
-                                                className='object-cover w-max'
+                                                className='object-cover w-full h-full'
                                                 onError={({currentTarget}) => {
                                                     currentTarget.onerror = null // prevents looping
                                                     currentTarget.src = errorValue.image
                                                 }}
                                             />
                                         </div>
-                                        <div className='w-40 max-2xl:w-24 truncate'>
-                                            <b className='text-lg truncate max-2xl:text-sm'>{song.name}</b>
+                                        <div className='w-40 mt-2 max-2xl:w-24 truncate'>
+                                            <b className='text-lg px-4 w-24 text-center truncate max-2xl:text-sm'>
+                                                {song.name}
+                                            </b>
                                         </div>
                                     </div>
                                 ))}
@@ -151,38 +153,40 @@ const Home = () => {
                         }}
                     >
                         <div className='flex justify-between items-end mx-4 py-1'>
-                            <b className='text-lg max-2xl:text-base'>Top Artist</b>
+                            <b className='text-lg max-2xl:text-base'>Nghệ Sĩ</b>
                             <Link to={endPoint.artist} className='max-2xl:text-sm'>
-                                See all
+                                Xem thêm
                             </Link>
                         </div>
-                        <div className='h-52 max-2xl:h-36'>
+                        <div className='h-44 max-2xl:h-36'>
                             <Slider {...settingAritist} className='w-full'>
                                 {listArtist &&
                                     listArtist.map((artist) => (
                                         <Link
                                             to={endPoint.artist.concat(`/${artist.id}`)}
                                             key={artist.id}
-                                            className={`text-center px-3 py-2 my-2`}
+                                            className={`text-center px-3.5 my-2`}
                                         >
-                                            <div className='mb-2 w-32 h-32 max-2xl:w-24 max-2xl:h-24 rounded-full overflow-hidden'>
+                                            <div className='mb-2 w-28 h-28 max-2xl:w-24 max-2xl:h-24 rounded-full overflow-hidden'>
                                                 <img
                                                     src={artist.avatar || ''}
                                                     className='object-cover w-full h-full'
+                                                    alt={formatName(artist.firstName, artist.lastName)}
                                                     onError={({currentTarget}) => {
                                                         currentTarget.onerror = null // prevents looping
                                                         currentTarget.src = errorValue.image
                                                     }}
                                                 />
                                             </div>
-                                            <p className=''></p>
                                             <b className='opacity-80 flex items-center justify-center text-lg max-2xl:text-sm'>
-                                                {formatName(artist.firstName, artist.lastName)}
-                                                {artist?.isPremium ?
+                                                <span className='truncate text-center w-24'>
+                                                    {formatName(artist.firstName, artist.lastName)}
+                                                </span>
+                                                {artist?.isPremium && (
                                                     <span className='ml-2 text-secondary'>
                                                         <CheckCircle size={16} strokeWidth={3} />
                                                     </span>
-                                                :   <></>}
+                                                )}
                                             </b>
                                             {/* <p className='opacity-80 flex items-center justify-center'>
                                                 {formatListened(artist.listen)}
@@ -194,7 +198,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='h-full w-full m-5'>
-                    <img src='/assets/imgs/background.jpg' alt='' className='object-cover' />
+                    <img src='/assets/imgs/background.jpg' className='object-cover' />
                 </div>
             </div>
         </>

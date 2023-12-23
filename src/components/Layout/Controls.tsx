@@ -16,7 +16,7 @@ import {
 import {Slider} from '../ui/slider'
 import {errorValue} from '@/utils/constant'
 import {IMusic} from '@/types/music'
-import {formatName} from '@/hooks/functions'
+import {formatName, formatTime} from '@/hooks/functions'
 import {useAppSelector} from '@/app/hook'
 
 type TSlider = (value: number[]) => void
@@ -45,6 +45,7 @@ const Player = ({
     isLoop,
     isShuffle,
     volume,
+    duration,
     currentTime,
     toggleMusic,
     handleNext,
@@ -141,6 +142,10 @@ const Player = ({
                             </ul>
                         </div>
                         <div className='row w-full mt-2 max-2xl:mt-0'>
+                            <div className='w-full -mt-8 py-2 flex justify-between text-sm'>
+                                <span>00:00</span>
+                                <span>{duration ? formatTime(duration) : '--:--'}</span>
+                            </div>
                             <Slider value={[currentTime]} min={0} max={100} step={1} onValueChange={handleProgress} />
                         </div>
                     </div>
