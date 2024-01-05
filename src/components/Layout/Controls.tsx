@@ -18,6 +18,7 @@ import {errorValue} from '@/utils/constant'
 import {IMusic} from '@/types/music'
 import {formatName, formatTime} from '@/hooks/functions'
 import {useAppSelector} from '@/app/hook'
+import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '../ui/dropdown-menu'
 
 type TSlider = (value: number[]) => void
 
@@ -37,6 +38,7 @@ type Props = {
     handleLoop: MouseEventHandler
     handleShuffle: MouseEventHandler
     handleFavor: MouseEventHandler
+    handleDownload: (song: IMusic) => void
 }
 
 const Player = ({
@@ -55,6 +57,7 @@ const Player = ({
     handleLoop,
     handleShuffle,
     handleFavor,
+    handleDownload,
 }: Props) => {
     const {listFavor} = useAppSelector((state) => state.favor)
 
@@ -88,9 +91,14 @@ const Player = ({
                         <button onClick={handleFavor}>
                             <IsFavor />
                         </button>
-                        <button>
-                            <MoreHorizontal />
-                        </button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <MoreHorizontal />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side='top' align='start'>
+                                <DropdownMenuItem onClick={() => handleDownload(song)}>Download</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
                 <div className='col-span-6'>

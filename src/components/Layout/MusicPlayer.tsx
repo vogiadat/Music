@@ -101,6 +101,44 @@ const MusicPlayer = () => {
         }
     }
 
+    const handleDownload = async (song: IMusic) => {
+        const audioUrl = song.src
+        if (!user && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need login to download this music',
+            })
+        if (!user?.isPremium && song.isPremium)
+            return toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Need buy premium to download this music',
+            })
+
+        try {
+            const response = await fetch(audioUrl)
+            const blob = await response.blob()
+
+            const blobUrl = URL.createObjectURL(blob)
+
+            const link = document.createElement('a')
+            link.href = blobUrl
+            link.download = song.name.concat('.mp3')
+            link.target = '_blank'
+            document.body.appendChild(link)
+            link.click()
+
+            document.body.removeChild(link)
+
+            URL.revokeObjectURL(blobUrl)
+
+            // navigate(endPoint.download.concat(`/${song.id}`))
+        } catch (error) {
+            console.error('Error downloading audio:', error)
+        }
+    }
+
     useEffect(() => {
         if (music) setInitMusic(music)
         if (!audio.current) return
@@ -155,6 +193,7 @@ const MusicPlayer = () => {
                         handleLoop={handleLoop}
                         handleShuffle={handleShuffle}
                         handleFavor={handleFavor}
+                        handleDownload={handleDownload}
                     />
                 </>
             )}

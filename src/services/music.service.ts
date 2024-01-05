@@ -1,5 +1,5 @@
-import api, {ResponseSuccess} from '@/configs/axios'
-import {IAlbum, IDataUpload, IFavor, IMusic} from '@/types/music'
+import api, {ResponseSuccess, ResPaginationSuccess} from '@/configs/axios'
+import {IAlbum, IComment, IDataUpload, IFavor, IMusic} from '@/types/music'
 
 export const getAllMusic = async (search: string) => {
     const res = await api.get<ResponseSuccess<IMusic[]>>(search ? `/media?search=${search}` : '/media')
@@ -24,6 +24,16 @@ export const getAllAlbums = async () => {
 export const getMyMusic = async () => {
     const res = await api.get<ResponseSuccess<IMusic[]>>(`/media/my-music/me`)
     return res.data
+}
+
+export const getComment = async (id: string) => {
+    const res = await api.get<ResPaginationSuccess<IComment[]>>(`/comment/music/${id}`)
+    return res.data.element
+}
+
+export const sendComment = async (params: {mediaId: string; message: string}) => {
+    const res = await api.post('/comment', params)
+    return res
 }
 
 export const upload = async (file: File) => {

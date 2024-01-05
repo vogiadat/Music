@@ -41,6 +41,15 @@ export interface IPlaylist {
     page: number
 }
 
+export interface IComment {
+    id: string
+    mediaId: string
+    authorId: string
+    author: IUser
+    message: string
+    createAt: string
+    updateAt: string
+}
 export interface IFavor {
     id: string
     media: IMusic
