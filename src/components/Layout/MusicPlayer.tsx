@@ -104,6 +104,7 @@ const MusicPlayer = () => {
     useEffect(() => {
         if (music) setInitMusic(music)
         if (!audio.current) return
+        if (audio.current.volume !== volume) audio.current.volume = volume / 100
         if (!isPlay) return audio.current.pause()
         const isPremium = initMusic?.isPremium || music?.isPremium
         if (!isPremium) return void audio.current.play()
@@ -126,7 +127,6 @@ const MusicPlayer = () => {
             return audio.current.pause()
         }
         audio.current.play()
-        audio.current.volume = volume / 100
     }, [toast, isPlay, user, volume, currentTime, music, initMusic])
 
     return (

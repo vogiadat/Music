@@ -165,7 +165,7 @@ const Home = () => {
                                         <Link
                                             to={endPoint.artist.concat(`/${artist.id}`)}
                                             key={artist.id}
-                                            className={`text-center px-3.5 my-2`}
+                                            className={`text-center px-4 my-2`}
                                         >
                                             <div className='mb-2 w-28 h-28 max-2xl:w-24 max-2xl:h-24 rounded-full overflow-hidden'>
                                                 <img
