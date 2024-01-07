@@ -18,6 +18,7 @@ export interface IMusic {
     image: string
     src: string
     authorId: string
+    duration: number
     isPremium: boolean
     albumId?: string
     author?: IUser

@@ -14,7 +14,7 @@ const Artist = () => {
 
     return (
         <>
-            <ListCard title='Artist' list={listArtist} />
+            <ListCard title='Nghệ sĩ' list={listArtist} />
         </>
     )
 }

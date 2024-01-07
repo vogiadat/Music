@@ -1,16 +1,19 @@
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import Player from '@/components/Layout/Controls'
 import {useEffect, useRef, useState} from 'react'
-import {IMusic} from '@/types/music'
+import {IComment, IMusic} from '@/types/music'
 import {setCurrentSong} from '@/features/musicSlice'
 import {useToast} from '../ui/use-toast'
 import {addFavor, delFavor} from '@/features/favorSlice'
+import {getComment, sendComment} from '@/services/music.service'
 
 const MusicPlayer = () => {
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
     const {listFavor} = useAppSelector((state) => state.favor)
     const {music, listMusic} = useAppSelector((state) => state.music)
+    const [listComment, setListComment] = useState<IComment[]>()
+    const [newComment, setNewComment] = useState({mediaId: '', message: ''})
     const dispatch = useAppDispatch()
 
     // ref
@@ -39,6 +42,7 @@ const MusicPlayer = () => {
         if (!song) return
         const isFavor = listFavor?.find((music) => music.mediaId === song.id)
         if (!isFavor) return dispatch(addFavor(song.id))
+        console.log(isFavor)
         dispatch(delFavor(isFavor.id))
     }
 
@@ -139,6 +143,35 @@ const MusicPlayer = () => {
         }
     }
 
+    const handleComment = async (id: string) => {
+        const res = await getComment(id)
+        setListComment(res.rows)
+        setNewComment({...newComment, mediaId: id})
+    }
+
+    const changeComment = (comment: string) => {
+        setNewComment({
+            ...newComment,
+            message: comment,
+        })
+    }
+
+    const handleSendComment = async () => {
+        const res = await sendComment(newComment)
+
+        if (res.status === 200)
+            return toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Post Success`,
+            })
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: `Post Error`,
+        })
+    }
+
     useEffect(() => {
         if (music) setInitMusic(music)
         if (!audio.current) return
@@ -194,6 +227,11 @@ const MusicPlayer = () => {
                         handleShuffle={handleShuffle}
                         handleFavor={handleFavor}
                         handleDownload={handleDownload}
+                        initComment={newComment.message}
+                        listComment={listComment || []}
+                        handleComment={handleComment}
+                        changeComment={changeComment}
+                        handleSendComment={handleSendComment}
                     />
                 </>
             )}

@@ -17,11 +17,9 @@ const Trend = () => {
         <>
             <div className='ml-6'>
                 <div>
-                    <b className='text-4xl font-extrabold'>Trend</b>
+                    <b className='text-4xl font-extrabold'>Thịnh hành</b>
                 </div>
-                <div className='w-full relative'>
-                    <ListMusic listSong={listSong || []} />
-                </div>
+                <div className='w-full relative'>{listSong && <ListMusic listSong={listSong} />}</div>
             </div>
         </>
     )

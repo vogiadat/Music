@@ -11,7 +11,7 @@ import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger}
 import {getComment, sendComment} from '@/services/music.service'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {useState} from 'react'
-import {formatName} from '@/hooks/functions'
+import {formatName, formatTime} from '@/hooks/functions'
 
 type Props = {
     listSong: IMusic[]
@@ -130,8 +130,13 @@ const ListMusic = ({listSong}: Props) => {
                                     )}
                                 </div>
                             </div>
-                            <div className='col-span-4'>{song.album?.name}</div>
-                            <div className='col-span-1 flex items-center'>
+                            <div className='col-span-3 flex items-center justify-center text-white text-opacity-60'>
+                                {song.album?.name}
+                            </div>
+                            <div className='col-span-1 flex items-center justify-center text-xl'>
+                                {formatTime(song.duration)}
+                            </div>
+                            <div className='col-span-1 flex items-center justify-center'>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger>
                                         <MoreHorizontal size={28} />

@@ -12,13 +12,18 @@ import {
     PauseCircle,
     Heart,
     MoreHorizontal,
+    Send,
 } from 'lucide-react'
 import {Slider} from '../ui/slider'
 import {errorValue} from '@/utils/constant'
-import {IMusic} from '@/types/music'
+import {IComment, IMusic} from '@/types/music'
 import {formatName, formatTime} from '@/hooks/functions'
 import {useAppSelector} from '@/app/hook'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '../ui/dropdown-menu'
+import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from '../ui/sheet'
+import {ScrollArea} from '../ui/scroll-area'
+import {Avatar, AvatarFallback, AvatarImage} from '../ui/avatar'
+import {Input} from '../ui/input'
 
 type TSlider = (value: number[]) => void
 
@@ -39,6 +44,12 @@ type Props = {
     handleShuffle: MouseEventHandler
     handleFavor: MouseEventHandler
     handleDownload: (song: IMusic) => void
+    // comment
+    initComment: string
+    listComment: IComment[]
+    changeComment: (comment: string) => void
+    handleComment: (id: string) => void
+    handleSendComment: MouseEventHandler
 }
 
 const Player = ({
@@ -58,6 +69,11 @@ const Player = ({
     handleShuffle,
     handleFavor,
     handleDownload,
+    initComment,
+    listComment,
+    changeComment,
+    handleComment,
+    handleSendComment,
 }: Props) => {
     const {listFavor} = useAppSelector((state) => state.favor)
 
@@ -97,6 +113,74 @@ const Player = ({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side='top' align='start'>
                                 <DropdownMenuItem onClick={() => handleDownload(song)}>Download</DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Sheet>
+                                        <SheetTrigger
+                                            className='mt-1 text-sm py-1 pl-2 text-left w-full rounded-sm hover:bg-secondary hover:text-white'
+                                            onClick={() => handleComment(song.id)}
+                                        >
+                                            Comment
+                                        </SheetTrigger>
+                                        <SheetContent className='text-white border-0'>
+                                            <SheetHeader>
+                                                <SheetTitle className='uppercase bg-zinc-800 text-white text-opacity-60 mx-auto text-center py-2 rounded-3xl w-5/6'>
+                                                    Comments
+                                                </SheetTitle>
+                                            </SheetHeader>
+                                            <ScrollArea className='grid gap-4 py-4'>
+                                                {listComment &&
+                                                    listComment.map((comment) => (
+                                                        <div
+                                                            className='my-2 grid grid-cols-4 items-center gap-4 bg-zinc-700 rounded-xl px-4 py-2'
+                                                            key={comment.id}
+                                                        >
+                                                            <Avatar>
+                                                                <AvatarImage
+                                                                    src={comment.author.avatar || ''}
+                                                                    alt=''
+                                                                    onError={({currentTarget}) => {
+                                                                        currentTarget.onerror = null // prevents looping
+                                                                        currentTarget.src = errorValue.image
+                                                                    }}
+                                                                />
+                                                                <AvatarFallback className='text-background text-center'>
+                                                                    {formatName(
+                                                                        comment.author.firstName,
+                                                                        comment.author.lastName,
+                                                                    )}
+                                                                </AvatarFallback>
+                                                            </Avatar>
+                                                            <div className='col-span-3 -ml-4'>
+                                                                <b>
+                                                                    {formatName(
+                                                                        comment.author.firstName,
+                                                                        comment.author.lastName,
+                                                                    )}
+                                                                </b>
+                                                                <p className='line-clamp-4 text-justify'>
+                                                                    {comment.message}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                            </ScrollArea>
+                                            <SheetFooter>
+                                                <div className='grid w-full '>
+                                                    <Input
+                                                        id='yourComment'
+                                                        value={initComment}
+                                                        placeholder='Enter your comment'
+                                                        className='bg-white text-black'
+                                                        onChange={(e) => changeComment(e.target.value)}
+                                                    />
+                                                </div>
+                                                <button type='button' onClick={handleSendComment}>
+                                                    <Send />
+                                                </button>
+                                            </SheetFooter>
+                                        </SheetContent>
+                                    </Sheet>
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

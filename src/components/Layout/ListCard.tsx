@@ -72,7 +72,7 @@ const ListCard = ({title, list}: Props) => {
                                                     {formatName(item.firstName, item.lastName) || ''}
                                                 </b>
                                                 <p className='opacity-40 max-2xl:text-xs:'>
-                                                    {`${formatListened(item?.listened || 0)} Lượt nghe`}
+                                                    {`${formatListened(item?.listenNumber || 0)} Lượt nghe`}
                                                 </p>
                                             </div>
                                         </div>
