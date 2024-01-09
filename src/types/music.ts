@@ -31,6 +31,7 @@ export interface IDataUpload {
     image: string
     desc: string
     isPremium: boolean
+    duration: number
     albumId?: string
 }
 

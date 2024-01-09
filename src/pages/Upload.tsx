@@ -22,6 +22,7 @@ import {Textarea} from '@/components/ui/textarea'
 import {Switch} from '@/components/ui/switch'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {useToast} from '@/components/ui/use-toast'
+import {list} from '@/features/favorSlice'
 
 const Upload = () => {
     const {toast} = useToast()
@@ -30,10 +31,11 @@ const Upload = () => {
     const [file, setFile] = useState<File>()
     const [img, setImg] = useState<File>()
     const [data, setData] = useState<IDataUpload>({
-        name: '',
         src: '',
-        image: '',
+        name: '',
         desc: '',
+        image: '',
+        duration: 0,
         isPremium: false,
     })
     const [listSong, setListSong] = useState<IMusic[]>([])
@@ -47,23 +49,37 @@ const Upload = () => {
     const handleUpload = async () => {
         setIsLoading(true)
         let src = data.src,
-            image = data.image
+            image = data.image,
+            duration = data.duration
         if (!src && file) src = await upload(file)
         if (!image && img) image = await upload(img)
-        const uploadData = {...data, src, image}
-        return await createMusic(uploadData).then(() => {
-            setIsLoading(false)
-            toast({
-                variant: 'success',
-                title: 'Success',
-                description: `Upload success`,
-            })
-        })
+        const audio = new Audio(src)
+
+        audio.onloadedmetadata = () => {
+            duration = audio.duration
+            const uploadData = {...data, src, image, duration}
+
+            return createMusic(uploadData)
+                .then(() => {
+                    setIsLoading(false)
+                    toast({
+                        variant: 'success',
+                        title: 'Success',
+                        description: 'Upload success',
+                    })
+                })
+                .catch((error) => {
+                    setIsLoading(false)
+                    console.error('Error:', error)
+                })
+        }
+
+        audio.load()
     }
 
     return (
         <>
-            {!user ?
+            {listSong.length === 0 ?
                 <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                     <div className='grid gap-3 text-center'>
                         <UploadIcon size={80} className='mx-auto' />

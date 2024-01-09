@@ -1,17 +1,12 @@
-import {MoreHorizontal, Send} from 'lucide-react'
-import {IComment, IMusic} from '@/types/music'
+import {ArrowDownToLine} from 'lucide-react'
+import {IMusic} from '@/types/music'
 import {currentSong} from '@/features/musicSlice'
 import {errorValue} from '@/utils/constant'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {useToast} from '../ui/use-toast'
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '@/components/ui/dropdown-menu'
 import {ScrollArea} from '@/components/ui/scroll-area'
-import {Input} from '@/components/ui/input'
-import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
-import {getComment, sendComment} from '@/services/music.service'
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
-import {useState} from 'react'
-import {formatName, formatTime} from '@/hooks/functions'
+import {formatTime} from '@/hooks/functions'
+import {addDownload} from '@/services/music.service'
 
 type Props = {
     listSong: IMusic[]
@@ -21,8 +16,6 @@ const ListMusic = ({listSong}: Props) => {
     const {toast} = useToast()
     const {music} = useAppSelector((state) => state.music)
     const {user} = useAppSelector((state) => state.auth)
-    const [listComment, setListComment] = useState<IComment[]>()
-    const [newComment, setNewComment] = useState({mediaId: '', message: ''})
     const dispatch = useAppDispatch()
 
     const handlePlayMusic = async (song: IMusic) => {
@@ -72,31 +65,10 @@ const ListMusic = ({listSong}: Props) => {
             document.body.removeChild(link)
 
             URL.revokeObjectURL(blobUrl)
+            return await addDownload(song.id)
         } catch (error) {
             console.error('Error downloading audio:', error)
         }
-    }
-
-    const handleComment = async (id: string) => {
-        const res = await getComment(id)
-        setListComment(res.rows)
-        setNewComment({...newComment, mediaId: id})
-    }
-
-    const handleSendComment = async () => {
-        const res = await sendComment(newComment)
-
-        if (res.status === 200)
-            return toast({
-                variant: 'success',
-                title: 'Success',
-                description: `Post Success`,
-            })
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: `Post Error`,
-        })
     }
 
     return (
@@ -137,92 +109,7 @@ const ListMusic = ({listSong}: Props) => {
                                 {formatTime(song.duration)}
                             </div>
                             <div className='col-span-1 flex items-center justify-center'>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger>
-                                        <MoreHorizontal size={28} />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent>
-                                        <DropdownMenuItem
-                                            onClick={() => handleDownload(song)}
-                                            className='cursor-pointer'
-                                        >
-                                            Download
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem asChild>
-                                            <Sheet>
-                                                <SheetTrigger
-                                                    className='mt-1 text-sm py-1 pl-2 text-left w-full rounded-sm hover:bg-secondary hover:text-white'
-                                                    onClick={() => handleComment(song.id)}
-                                                >
-                                                    Comment
-                                                </SheetTrigger>
-                                                <SheetContent className='text-white border-0'>
-                                                    <SheetHeader>
-                                                        <SheetTitle className='uppercase bg-zinc-800 text-white text-opacity-60 mx-auto text-center py-2 rounded-3xl w-5/6'>
-                                                            Comments
-                                                        </SheetTitle>
-                                                    </SheetHeader>
-                                                    <ScrollArea className='grid gap-4 py-4'>
-                                                        {listComment &&
-                                                            listComment.map((comment) => (
-                                                                <div
-                                                                    className='my-2 grid grid-cols-4 items-center gap-4 bg-zinc-700 rounded-xl px-4 py-2'
-                                                                    key={comment.id}
-                                                                >
-                                                                    <Avatar>
-                                                                        <AvatarImage
-                                                                            src={comment.author.avatar || ''}
-                                                                            alt=''
-                                                                            onError={({currentTarget}) => {
-                                                                                currentTarget.onerror = null // prevents looping
-                                                                                currentTarget.src = errorValue.image
-                                                                            }}
-                                                                        />
-                                                                        <AvatarFallback className='text-background text-center'>
-                                                                            {formatName(
-                                                                                comment.author.firstName,
-                                                                                comment.author.lastName,
-                                                                            )}
-                                                                        </AvatarFallback>
-                                                                    </Avatar>
-                                                                    <div className='col-span-3 -ml-4'>
-                                                                        <b>
-                                                                            {formatName(
-                                                                                comment.author.firstName,
-                                                                                comment.author.lastName,
-                                                                            )}
-                                                                        </b>
-                                                                        <p className='line-clamp-4 text-justify'>
-                                                                            {comment.message}
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            ))}
-                                                    </ScrollArea>
-                                                    <SheetFooter>
-                                                        <div className='grid w-full '>
-                                                            <Input
-                                                                id='yourComment'
-                                                                value={newComment.message}
-                                                                placeholder='Enter your comment'
-                                                                className='bg-white text-black'
-                                                                onChange={(e) =>
-                                                                    setNewComment({
-                                                                        ...newComment,
-                                                                        message: e.target.value,
-                                                                    })
-                                                                }
-                                                            />
-                                                        </div>
-                                                        <button type='button' onClick={handleSendComment}>
-                                                            <Send />
-                                                        </button>
-                                                    </SheetFooter>
-                                                </SheetContent>
-                                            </Sheet>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <ArrowDownToLine onClick={() => handleDownload(song)} />
                             </div>
                         </li>
                     )

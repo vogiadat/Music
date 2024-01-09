@@ -20,7 +20,7 @@ const Recent = () => {
     if (user) {
         return (
             <>
-                {!history ?
+                {history.length === 0 ?
                     <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                         <div className='grid gap-3 text-center'>
                             <History size={80} className='mx-auto' />

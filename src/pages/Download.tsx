@@ -1,23 +1,24 @@
-import {useAppSelector} from '@/app/hook'
 import ListMusic from '@/components/Layout/ListMusic'
 import {DownloadIcon} from 'lucide-react'
 import {Link} from 'react-router-dom'
 import {IMusic} from '../types/music'
 import {useEffect, useState} from 'react'
-import {getAllMusic} from '@/services/music.service'
+import {getDownload} from '@/services/music.service'
 import {endPoint} from '@/utils/constant'
 
 const Download = () => {
-    const {user} = useAppSelector((state) => state.auth)
     const [listSong, setListSong] = useState<IMusic[]>([])
 
     useEffect(() => {
-        getAllMusic('').then((res) => setListSong(res.element))
+        getDownload().then((res) => {
+            setListSong(res.rows.map((item) => item.media))
+        })
     }, [])
+    console.log(listSong)
 
     return (
         <>
-            {!user ?
+            {listSong.length === 0 ?
                 <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                     <div className='grid gap-3 text-center'>
                         <DownloadIcon size={80} className='mx-auto' />
