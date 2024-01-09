@@ -1,4 +1,3 @@
-import {useAppSelector} from '@/app/hook'
 import {endPoint} from '@/utils/constant'
 import {Loader2, UploadIcon} from 'lucide-react'
 import {Link} from 'react-router-dom'
@@ -22,11 +21,9 @@ import {Textarea} from '@/components/ui/textarea'
 import {Switch} from '@/components/ui/switch'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {useToast} from '@/components/ui/use-toast'
-import {list} from '@/features/favorSlice'
 
 const Upload = () => {
     const {toast} = useToast()
-    const {user} = useAppSelector((state) => state.auth)
     const [isLoading, setIsLoading] = useState(false)
     const [file, setFile] = useState<File>()
     const [img, setImg] = useState<File>()
