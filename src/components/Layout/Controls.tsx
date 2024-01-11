@@ -235,7 +235,7 @@ const Player = ({
                         </div>
                         <div className='row w-full mt-2 max-2xl:mt-0'>
                             <div className='w-full -mt-8 py-2 flex justify-between text-sm'>
-                                <span>00:00</span>
+                                <span>{formatTime(currentTime)}</span>
                                 <span>{duration ? formatTime(duration) : '--:--'}</span>
                             </div>
                             <Slider value={[currentTime]} min={0} max={100} step={1} onValueChange={handleProgress} />
