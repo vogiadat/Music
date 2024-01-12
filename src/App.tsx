@@ -15,6 +15,8 @@ import Trend from '@/pages/Trend'
 
 import SingleArtist from './components/Client/SingleArtist'
 import SingleAlbum from './components/Client/SingleAlbum'
+import Category from './pages/Category'
+import SingleCategory from './components/Client/SingleCategory'
 
 const App = () => {
     return (
@@ -39,7 +41,10 @@ const App = () => {
                     <Route path=':id' element={<SingleArtist />} />
                 </Route>
                 <Route path='trend' element={<Trend />} />
-
+                <Route path='category'>
+                    <Route path='' element={<Category />} />
+                    <Route path=':id' element={<SingleCategory />} />
+                </Route>
                 {/* Single */}
             </Route>
         </Routes>

@@ -32,6 +32,10 @@ const navbarList = [
         title: 'Thịnh Hành',
         slug: endPoint.trend,
     },
+    {
+        title: 'Thể Loại',
+        slug: endPoint.category,
+    },
 ]
 
 const Client = () => {
@@ -39,7 +43,6 @@ const Client = () => {
     const dispatch = useAppDispatch()
     const {user} = useAppSelector((state) => state.auth)
     const {pathname} = useLocation()
-    const {music} = useAppSelector((state) => state.music)
     const [isLogin, setIsLogin] = useState(true)
     const [search, setSearch] = useState('')
     const navigate = useNavigate()
@@ -66,7 +69,7 @@ const Client = () => {
     useEffect(() => {
         dispatch(auth())
         dispatch(getFavor())
-    }, [music])
+    }, [dispatch])
 
     return (
         <>
@@ -75,7 +78,7 @@ const Client = () => {
                 <Sidebar />
                 <div className='md:col-span-10 col-span-12'>
                     <div className='grid grid-cols-12 py-5'>
-                        <div className='md:col-span-3 md:block hidden'>
+                        <div className='md:col-span-4 md:block hidden'>
                             <ul className='flex justify-evenly text-xl font-medium uppercase'>
                                 {navbarList.map((item) => {
                                     const isActice = pathname === item.slug
@@ -95,7 +98,7 @@ const Client = () => {
                         <div className='md:hidden col-span-1 m-auto'>
                             <Menu />
                         </div>
-                        <div className='md:col-span-6 col-span-8'>
+                        <div className='md:col-span-5 col-span-8'>
                             <form className='md:w-3/5 mx-auto relative' onSubmit={handleSearch}>
                                 <input
                                     type='text'

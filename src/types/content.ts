@@ -1,5 +1,5 @@
 export interface IContent {
-    page: 'FAVORITE' | 'ALBUM' | 'PLAYLISTS' | 'ARTIST'
+    page: 'FAVORITE' | 'ALBUM' | 'PLAYLISTS' | 'ARTIST' | 'CATEGORY'
     title: string
     subtitle: string
     image: string

@@ -43,7 +43,7 @@ export const {authLogin, logout} = authSlice.actions
 
 export default authSlice.reducer
 
-export const auth = createAsyncThunk('auth/authsync', async (params, thunkApi) => {
+export const auth = createAsyncThunk('auth/authsync', async (_params, thunkApi) => {
     const token = localStorage.getItem(CLIENT_TOKEN)
     try {
         const {element} = await getMe()

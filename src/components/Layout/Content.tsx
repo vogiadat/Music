@@ -1,11 +1,10 @@
 import {IMusic} from '@/types/music'
 import {Heart, MoreHorizontal, Music2, PlayCircle, Search} from 'lucide-react'
-// import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import TableMusic from './TableMusic'
 import {IContent} from '@/types/content'
 import {endPoint, errorValue} from '@/utils/constant'
 import {Link} from 'react-router-dom'
-import {Avatar, AvatarFallback, AvatarImage} from '../ui/avatar'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 
 interface Music {
     index: number
@@ -25,39 +24,33 @@ const Content = ({data, content}: Props) => {
                     content.page === 'PLAYLISTS' ? 'bg-gradient-to-b from-background ' : 'bg-transparent'
                 } rounded-t-xl`}
             >
-                <div className='p-6 grid grid-cols-4 gap-10'>
-                    <div className='col-span-1'>
+                <div className='p-6 flex gap-10'>
+                    <div className='w-60 h-60 overflow-hidden rounded-xl'>
                         <img
-                            src={content.image || ''}
+                            src={content.image}
                             alt={content.title}
                             onError={({currentTarget}) => {
                                 currentTarget.onerror = null // prevents looping
                                 currentTarget.src = errorValue.image
                             }}
-                            className='rounded-xl overflow-hidden object-cover'
+                            className='w-full h-full object-cover'
                         />
                     </div>
-                    <div className='col-span-3 flex items-end'>
+                    <div className='flex items-end'>
                         <div className=''>
                             <p className='mb-2 text-xl font-medium'>{content.page}</p>
                             <b className='text-4xl font-extrabold'>{content.title}</b>
-                            <p className='mt-4 opacity-50'>
-                                {content.avatar && (
+                            {content.subtitle && (
+                                <p className='mt-4 opacity-50 flex items-center gap-4'>
                                     <Avatar>
-                                        <AvatarImage
-                                            src={content.avatar}
-                                            onError={({currentTarget}) => {
-                                                currentTarget.onerror = null // prevents looping
-                                                currentTarget.src = errorValue.image
-                                            }}
-                                        />
+                                        <AvatarImage src={content.avatar} alt='' />
                                         <AvatarFallback className='text-background text-center'>
                                             {content.subtitle}
                                         </AvatarFallback>
                                     </Avatar>
-                                )}
-                                {content.subtitle}
-                            </p>
+                                    {content.subtitle}
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div
@@ -80,17 +73,6 @@ const Content = ({data, content}: Props) => {
                         <div className='flex items-center gap-4'>
                             <div>
                                 <Search />
-                            </div>
-                            <div>
-                                {/* <Select>
-                                    <SelectTrigger className='w-[180px] border-none'>
-                                        <SelectValue placeholder='Custom order' />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value='title'>Title</SelectItem>
-                                        <SelectItem value='artist'>Artist</SelectItem>
-                                    </SelectContent>
-                                </Select> */}
                             </div>
                         </div>
                     </div>

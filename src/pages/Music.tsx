@@ -19,7 +19,7 @@ const Music = () => {
         <>
             <div className='ml-6'>
                 <div>
-                    <b className='text-4xl font-extrabold'>Bài hát</b>
+                    <b className='text-4xl font-extrabold'>Bài Hát</b>
                 </div>
                 <div className='w-full relative'>{listSong && <ListMusic listSong={listSong} />}</div>
             </div>

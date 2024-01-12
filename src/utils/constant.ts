@@ -3,19 +3,18 @@ const host = import.meta.env.BASE_URL
 export const CLIENT_TOKEN = '__CLIENT_TOKEN__'
 
 export const endPoint = {
+    // navbar
+    music: host.concat('music'),
+    artist: host.concat('artist'),
+    trend: host.concat('trend'),
+    category: host.concat('category'),
+    // sidebar
     home: host.concat(''),
     favor: host.concat('favourite'),
     recent: host.concat('recent'),
     albums: host.concat('album'),
     download: host.concat('download'),
     upload: host.concat('upload'),
-    music: host.concat('music'),
-    artist: host.concat('artist'),
-    trend: host.concat('trend'),
-    auth: {
-        login: host.concat('auth/login'),
-        register: host.concat('auth/register'),
-    },
 }
 
 export const errorValue = {

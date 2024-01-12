@@ -1,14 +1,8 @@
 import {IUser} from './user'
 
-export interface IAlbum {
-    id: string
-    name: string
-    authorId: string
-    desc: string
-    image: string
-
-    author?: IUser
-    medias?: IMusic[]
+export interface Music {
+    index: number
+    song: IMusic
 }
 
 export interface IMusic {
@@ -23,6 +17,18 @@ export interface IMusic {
     albumId?: string
     author?: IUser
     album?: IAlbum
+}
+
+export interface IAlbum {
+    id: string
+    name: string
+    authorId: string
+    desc?: string
+    note?: string
+    image: string
+
+    author?: IUser
+    medias?: IMusic[]
 }
 
 export interface IDataUpload {
@@ -58,9 +64,4 @@ export interface IFavor {
     mediaId: string
     createAt: string
     updateAt: string
-}
-
-export interface Music {
-    index: number
-    song: IMusic
 }
