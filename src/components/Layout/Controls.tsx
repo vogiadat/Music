@@ -18,7 +18,6 @@ import {Slider} from '../ui/slider'
 import {errorValue} from '@/utils/constant'
 import {IComment, IMusic} from '@/types/music'
 import {formatName, formatTime} from '@/hooks/functions'
-import {useAppSelector} from '@/app/hook'
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from '../ui/dropdown-menu'
 import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger} from '../ui/sheet'
 import {ScrollArea} from '../ui/scroll-area'
@@ -30,9 +29,11 @@ type TSlider = (value: number[]) => void
 type Props = {
     song: IMusic
     toggleMusic: MouseEventHandler
+    isFavor: string
     isPlay: boolean
     isLoop: boolean
     isShuffle: boolean
+    initTime: number
     currentTime: number
     duration: number
     volume: number
@@ -54,11 +55,13 @@ type Props = {
 
 const Player = ({
     song,
+    isFavor,
     isPlay,
     isLoop,
     isShuffle,
     volume,
     duration,
+    initTime,
     currentTime,
     toggleMusic,
     handleNext,
@@ -75,13 +78,6 @@ const Player = ({
     handleComment,
     handleSendComment,
 }: Props) => {
-    const {listFavor} = useAppSelector((state) => state.favor)
-
-    const IsFavor = () => {
-        const isFavor = listFavor?.find((music) => music.media.id === song.id)
-        return isFavor ? <Heart className='text-secondary fill-current' /> : <Heart />
-    }
-
     return (
         <>
             <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-36 max-h-36 max-2xl:h-20'>
@@ -105,7 +101,7 @@ const Player = ({
                     </div>
                     <div className='flex gap-2 items-center'>
                         <button onClick={handleFavor}>
-                            <IsFavor />
+                            <Heart className={isFavor} />
                         </button>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
@@ -235,7 +231,7 @@ const Player = ({
                         </div>
                         <div className='row w-full mt-2 max-2xl:mt-0'>
                             <div className='w-full -mt-8 py-2 flex justify-between text-sm'>
-                                <span>{formatTime(currentTime)}</span>
+                                <span>{formatTime(initTime)}</span>
                                 <span>{duration ? formatTime(duration) : '--:--'}</span>
                             </div>
                             <Slider value={[currentTime]} min={0} max={100} step={1} onValueChange={handleProgress} />

@@ -2,7 +2,6 @@ import {createSlice} from '@reduxjs/toolkit'
 import {IAlbum, IMusic} from '@/types/music'
 
 export interface MusicState {
-    search?: string | ''
     music: IMusic | null
     listMusic: IMusic[] | null
     album?: IAlbum | null
@@ -10,7 +9,6 @@ export interface MusicState {
 
 // Define the initial state using that type
 const initialState: MusicState = {
-    search: '',
     music: null,
     listMusic: null,
     album: null,
@@ -37,15 +35,9 @@ export const musicSlice = createSlice({
                 album: action.payload,
             }
         },
-        find: (state, action) => {
-            return {
-                ...state,
-                search: action.payload,
-            }
-        },
     },
 })
 
-export const {currentSong, setCurrentSong, setListSong, find} = musicSlice.actions
+export const {currentSong, setCurrentSong, setListSong} = musicSlice.actions
 
 export default musicSlice.reducer

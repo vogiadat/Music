@@ -1,27 +1,23 @@
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
-import {Outlet, Link, useLocation} from 'react-router-dom'
-import {CLIENT_TOKEN, endPoint} from '@/utils/constant'
-import {useEffect, useState} from 'react'
 import Sidebar from '@/components/Client/Sidebar'
-import {Search, Menu, ChevronDown, User, CheckCircle} from 'lucide-react'
-import {errorValue} from '../utils/constant'
-import {HoverCard, HoverCardContent} from '@radix-ui/react-hover-card'
-import {HoverCardTrigger} from '@/components/ui/hover-card'
-import {Dialog, DialogTrigger} from '@/components/ui/dialog'
 import Login from '@/pages/Auth/Login'
 import Register from '@/pages/Auth/Register'
-import {Toaster} from '@/components/ui/toaster'
 import MusicPlayer from '@/components/Layout/MusicPlayer'
+import Profile from '@/components/Client/Profile'
+import {HoverCard, HoverCardContent, HoverCardTrigger} from '@/components/ui/hover-card'
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Dialog, DialogTrigger} from '@/components/ui/dialog'
+import {useToast} from '@/components/ui/use-toast'
+import {Toaster} from '@/components/ui/toaster'
+
+import {FormEvent, useEffect, useState} from 'react'
+import {Outlet, Link, useLocation, useNavigate} from 'react-router-dom'
+import {Search, Menu, ChevronDown, User, CheckCircle} from 'lucide-react'
+import {endPoint, errorValue} from '@/utils/constant'
 import {formatName} from '@/hooks/functions'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
-import {authLogin, logout} from '@/features/authSlice'
-import {useToast} from '@/components/ui/use-toast'
-import {getMyFavor} from '@/services/favor.service'
-import {list} from '@/features/favorSlice'
-import {getMe} from '@/services/user.service'
-import {addHistory} from '@/services/history.service'
-import {find} from '@/features/musicSlice'
-import Profile from '@/components/Client/Profile'
+import {auth, logout} from '@/features/authSlice'
+import {getFavor} from '@/features/favorSlice'
+import {Button} from '@/components/ui/button'
 
 const navbarList = [
     {
@@ -46,6 +42,7 @@ const Client = () => {
     const {music} = useAppSelector((state) => state.music)
     const [isLogin, setIsLogin] = useState(true)
     const [search, setSearch] = useState('')
+    const navigate = useNavigate()
     const handleLogin = () => {
         setIsLogin(!isLogin)
     }
@@ -61,25 +58,15 @@ const Client = () => {
         }
     }
 
-    const handleSearch = () => {
-        dispatch(find(search))
+    const handleSearch = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        navigate(endPoint.music.concat(`?search=${search}`))
     }
 
     useEffect(() => {
-        const token = localStorage.getItem(CLIENT_TOKEN)
-        getMe()
-            .then(({element}) => {
-                dispatch(authLogin({token, element}))
-            })
-            .catch(() => {
-                dispatch(logout())
-            })
-        if (music) addHistory(music.id)
-        getMyFavor().then((res) => {
-            dispatch(list(res.element.rows))
-        })
-        if (!search) dispatch(find(''))
-    }, [music, search])
+        dispatch(auth())
+        dispatch(getFavor())
+    }, [music])
 
     return (
         <>
@@ -109,28 +96,23 @@ const Client = () => {
                             <Menu />
                         </div>
                         <div className='md:col-span-6 col-span-8'>
-                            {(pathname === endPoint.music ||
-                                pathname === endPoint.trend ||
-                                pathname === endPoint.artist) && (
-                                <div className='md:w-3/5 mx-auto relative'>
-                                    <input
-                                        type='text'
-                                        name=''
-                                        id=''
-                                        value={search}
-                                        onChange={(e) => setSearch(e.target.value)}
-                                        className='bg-background w-full px-3 py-2 rounded-xl placeholder-shown:pl-10 placeholder:text-sm'
-                                        placeholder='Type your search here...'
-                                    />
-                                    <button
-                                        type='button'
-                                        onClick={handleSearch}
-                                        className='opacity-40 hover:text-secondary hover:opacity-60 transition-colors duration-150 ease-in-out'
-                                    >
-                                        <Search className='absolute inset-y-2 right-6' />
-                                    </button>
-                                </div>
-                            )}
+                            <form className='md:w-3/5 mx-auto relative' onSubmit={handleSearch}>
+                                <input
+                                    type='text'
+                                    name=''
+                                    id=''
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className='bg-background w-full px-3 py-2 rounded-xl placeholder-shown:pl-10 placeholder:text-sm'
+                                    placeholder='Type your search here...'
+                                />
+                                <button
+                                    type='submit'
+                                    className='opacity-40 hover:text-secondary hover:opacity-60 transition-colors duration-150 ease-in-out'
+                                >
+                                    <Search className='absolute inset-y-2 right-6' />
+                                </button>
+                            </form>
                         </div>
                         <div className='col-span-3'>
                             <div className='flex md:mr-20 md:justify-end justify-around'>
@@ -178,10 +160,13 @@ const Client = () => {
                                                     <Profile user={user} />
                                                 </Dialog>
                                             </HoverCardTrigger>
-                                            <HoverCardContent className='ml-16 mt-2 bg-zinc-800 w-32 rounded-lg p-2'>
-                                                <button className='hover:text-secondary p-2' onClick={handleLogout}>
+                                            <HoverCardContent className='ml-16 border-none mt-2 bg-secondary w-28 rounded-lg p-2'>
+                                                <Button
+                                                    className='w-full bg-transparent font-bold uppercase text-white hover:bg-white hover:bg-opacity-60 hover:text-secondary p-2 transition-colors duration-150 ease-in-out'
+                                                    onClick={handleLogout}
+                                                >
                                                     Logout
-                                                </button>
+                                                </Button>
                                             </HoverCardContent>
                                         </HoverCard>
                                     :   <Dialog>

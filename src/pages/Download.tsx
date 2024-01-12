@@ -14,7 +14,6 @@ const Download = () => {
             setListSong(res.rows.map((item) => item.media))
         })
     }, [])
-    console.log(listSong)
 
     return (
         <>

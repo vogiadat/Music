@@ -5,8 +5,8 @@ import {IComment, IMusic} from '@/types/music'
 import {setCurrentSong} from '@/features/musicSlice'
 import {useToast} from '../ui/use-toast'
 import {addFavor, delFavor} from '@/features/favorSlice'
-import {getComment, sendComment} from '@/services/music.service'
-
+import {addDownload, getComment, sendComment} from '@/services/music.service'
+// not yet addHistory
 const MusicPlayer = () => {
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
@@ -27,6 +27,12 @@ const MusicPlayer = () => {
     const [isLoop, setIsLoop] = useState(false)
     const [isShuffle, setIsShuffle] = useState(false)
 
+    const isFavor = () => {
+        if (!initMusic) return ''
+        const favor = listFavor?.find((music) => music.media.id === initMusic.id || '')
+        return favor ? 'text-secondary fill-current' : ''
+    }
+
     const toggleMusic = () => {
         setIsPlay(!isPlay)
     }
@@ -42,7 +48,6 @@ const MusicPlayer = () => {
         if (!song) return
         const isFavor = listFavor?.find((music) => music.mediaId === song.id)
         if (!isFavor) return dispatch(addFavor(song.id))
-        console.log(isFavor)
         dispatch(delFavor(isFavor.id))
     }
 
@@ -137,7 +142,7 @@ const MusicPlayer = () => {
 
             URL.revokeObjectURL(blobUrl)
 
-            // navigate(endPoint.download.concat(`/${song.id}`))
+            return await addDownload(song.id)
         } catch (error) {
             console.error('Error downloading audio:', error)
         }
@@ -212,10 +217,12 @@ const MusicPlayer = () => {
                     />
                     <Player
                         song={initMusic || music}
+                        initTime={audio.current?.currentTime || 0}
                         currentTime={currentTime}
                         isPlay={isPlay}
                         isLoop={isLoop}
                         isShuffle={isShuffle}
+                        isFavor={isFavor()}
                         toggleMusic={toggleMusic}
                         handleNext={handleNextSong}
                         handlePrev={handlePrevSong}

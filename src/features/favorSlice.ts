@@ -45,3 +45,12 @@ export const delFavor = createAsyncThunk('favor/remove', async (id: string, thun
         console.log(error)
     }
 })
+
+export const getFavor = createAsyncThunk('favor/list', async (param, thunkApi) => {
+    try {
+        const res = await getMyFavor()
+        thunkApi.dispatch(list(res.element.rows))
+    } catch (error) {
+        console.log(error)
+    }
+})
