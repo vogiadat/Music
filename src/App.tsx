@@ -19,6 +19,7 @@ import {Single as SingleAlbum} from './components/Client/Albums'
 import {Single as SingleCategory} from './components/Client/Category'
 import {Single as SinglePlayList} from './components/Client/PlayList'
 import MyPlaylist from './pages/MyPlaylist'
+import Notfound from './pages/Notfound'
 
 const App = () => {
     return (
@@ -52,6 +53,7 @@ const App = () => {
                     <Route path='my-list' element={<MyPlaylist />} />
                 </Route>
                 {/* Single */}
+                <Route path='*' element={<Notfound />} />
             </Route>
         </Routes>
     )

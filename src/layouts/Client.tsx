@@ -188,7 +188,7 @@ const Client = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='z-10 p-5 sticky inset-0'>
+                    <div className='z-10 p-5'>
                         <Outlet />
                     </div>
                 </div>
