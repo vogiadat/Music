@@ -20,6 +20,7 @@ interface IData {
 
 const Single = () => {
     const {listSong} = useAppSelector((state) => state.playlist)
+    const {music} = useAppSelector((state) => state.music)
     const [data, setData] = useState<IData[]>([])
     const [content, setContent] = useState<IContent>({page: 'PLAYLIST', title: '', subtitle: '', image: ''})
 
@@ -45,7 +46,7 @@ const Single = () => {
     return (
         <>
             <div
-                className={`w-full h-[850px] overflow-y-scroll ${
+                className={`w-full ${music && 'max-h-[680px]'} h-[850px] overflow-y-scroll ${
                     content.page === 'PLAYLISTS' ? 'bg-gradient-to-b from-background ' : 'bg-transparent'
                 } rounded-t-xl`}
             >

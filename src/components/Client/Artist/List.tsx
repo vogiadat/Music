@@ -15,10 +15,10 @@ const ListCard = ({title, list}: Props) => {
 
     return (
         <>
-            <div className='ml-6'>
+            <div className='ml-6 mb-4'>
                 <b className='text-4xl font-extrabold'>{title}</b>
             </div>
-            <div className={`w-full ${music && 'max-h-[700px]'} h-5/6 overflow-y-scroll`}>
+            <div className={`w-full ${music && 'max-h-[680px]'} h-5/6 overflow-y-scroll`}>
                 <div className={`h-full m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14`}>
                     {list &&
                         list.map((item) => (

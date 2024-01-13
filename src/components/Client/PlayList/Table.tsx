@@ -171,7 +171,7 @@ const TableMusic = ({data}: Props) => {
                             </TableRow>
                         ))}
                     </TableHeader>
-                    <TableBody className=''>
+                    <TableBody className={``}>
                         {table.getRowModel().rows?.length ?
                             table.getRowModel().rows.map((row) => (
                                 <TableRow

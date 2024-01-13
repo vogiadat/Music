@@ -1,6 +1,6 @@
 import {endPoint, errorValue} from '@/utils/constant'
 import {Link} from 'react-router-dom'
-import {useAppDispatch} from '@/app/hook'
+import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {IPlaylist} from '@/types/playlist'
 import {detailPlayList} from '@/features/playlistSlice'
 import {
@@ -27,6 +27,7 @@ type Props = {
 
 const List = ({title, list}: Props) => {
     const dispatch = useAppDispatch()
+    const {music} = useAppSelector((state) => state.music)
     const {toast} = useToast()
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [playlistName, setPlaylistName] = useState<string>('')
@@ -101,7 +102,7 @@ const List = ({title, list}: Props) => {
                     </DialogContent>
                 </Dialog>
             </div>
-            <div className={`w-full h-[850px] overflow-y-scroll`}>
+            <div className={`w-full ${music && 'max-h-[680px]'} h-[850px] overflow-y-scroll`}>
                 <div className='m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14'>
                     {list.map((item) => (
                         <Link
