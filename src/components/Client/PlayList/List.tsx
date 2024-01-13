@@ -112,11 +112,7 @@ const List = ({title, list}: Props) => {
                             <div className='bg-background rounded-xl h-80 max-2xl:h-60'>
                                 <div className='p-6 max-2xl:p-4 mx-auto'>
                                     <img
-                                        src={
-                                            item.playlistAndMusics.length > 0 ?
-                                                item.playlistAndMusics.at(0)?.media.image
-                                            :   ''
-                                        }
+                                        src={item.playlistAndMusics.at(0)?.media.image || ''}
                                         className='rounded-xl h-52 max-2xl:h-40 w-full overflow-hidden object-cover'
                                         onError={({currentTarget}) => {
                                             currentTarget.onerror = null // prevents looping
