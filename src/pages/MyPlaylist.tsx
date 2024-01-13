@@ -1,26 +1,20 @@
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {List} from '@/components/Client/PlayList'
 import {Dialog, DialogTrigger} from '@/components/ui/dialog'
-import {myPlayList} from '@/features/playlistSlice'
 import {endPoint} from '@/utils/constant'
 import {ListVideo} from 'lucide-react'
-import {useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import Auth from './Auth'
 import {openLogin} from '@/features/authSlice'
 
 const MyPlaylist = () => {
     const dispatch = useAppDispatch()
-    const {playlist} = useAppSelector((state) => state.playlist)
+    const {myList} = useAppSelector((state) => state.playlist)
     const {user} = useAppSelector((state) => state.auth)
 
     const handleModal = () => {
         dispatch(openLogin())
     }
-
-    useEffect(() => {
-        dispatch(myPlayList())
-    }, [])
 
     return (
         <>
@@ -43,7 +37,7 @@ const MyPlaylist = () => {
                         </Dialog>
                     </div>
                 </div>
-            : playlist.length <= 0 ?
+            : myList.length <= 0 ?
                 <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                     <div className='grid gap-3 text-center'>
                         <ListVideo size={80} className='mx-auto' />
@@ -56,7 +50,7 @@ const MyPlaylist = () => {
                         </Link>
                     </div>
                 </div>
-            :   <List title='Danh Sách Phát' list={playlist} />}
+            :   <List title='Danh Sách Phát' list={myList} />}
         </>
     )
 }

@@ -228,7 +228,7 @@ const MusicPlayer = () => {
                         toggleMusic={toggleMusic}
                         handleNext={handleNextSong}
                         handlePrev={handlePrevSong}
-                        duration={audio.current?.duration || 0}
+                        duration={initMusic?.duration || 0}
                         volume={volume}
                         handleVolume={handleVolume}
                         handleProgress={handleProgress}

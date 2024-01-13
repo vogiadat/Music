@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Music} from '@/types/music'
+import {IMusic} from '@/types/music'
 import {IContent} from '@/types/content'
 // import {getMusicByArtist} from '@/services/music.service'
 // import {useLocation} from 'react-router-dom'
@@ -12,26 +12,35 @@ import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import {Table} from '.'
 import {useAppSelector} from '@/app/hook'
 
+interface IData {
+    id: string
+    index: number
+    song: IMusic
+}
+
 const Single = () => {
     const {listSong} = useAppSelector((state) => state.playlist)
-    const [data, setData] = useState<Music[]>([])
+    const [data, setData] = useState<IData[]>([])
     const [content, setContent] = useState<IContent>({page: 'PLAYLIST', title: '', subtitle: '', image: ''})
+
     useEffect(() => {
         if (listSong) {
             setContent({
                 ...content,
                 title: listSong.name,
+                image: listSong.image || '',
             })
             setData(
                 listSong.playlistAndMusics.map((song, index) => {
                     return {
+                        id: song.id,
                         index,
                         song: song.media,
                     }
                 }),
             )
         }
-    }, [])
+    }, [listSong])
 
     return (
         <>

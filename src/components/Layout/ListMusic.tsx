@@ -1,35 +1,64 @@
-import {ArrowDownToLine} from 'lucide-react'
+import {ArrowDownToLine, Loader2, MoreHorizontal} from 'lucide-react'
 import {IMusic} from '@/types/music'
 import {currentSong} from '@/features/musicSlice'
 import {errorValue} from '@/utils/constant'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
-import {useToast} from '../ui/use-toast'
+import {useToast} from '@/components/ui/use-toast'
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {formatTime} from '@/hooks/functions'
 import {addDownload} from '@/services/download.service'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+
+import {Button} from '@/components/ui/button'
+import {Label} from '@/components/ui/label'
+import {useState} from 'react'
+import {HoverCard, HoverCardContent, HoverCardTrigger} from '@/components/ui/hover-card'
+import {IAddPlaylist} from '@/types/playlist'
+import {addToPlaylist} from '@/features/playlistSlice'
 
 type Props = {
     listSong: IMusic[]
 }
 
 const ListMusic = ({listSong}: Props) => {
+    const dispatch = useAppDispatch()
     const {toast} = useToast()
     const {music} = useAppSelector((state) => state.music)
     const {user} = useAppSelector((state) => state.auth)
-    const dispatch = useAppDispatch()
+    const {myList} = useAppSelector((state) => state.playlist)
+
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [data, setData] = useState<IAddPlaylist>({mediaId: '', playListId: ''})
 
     const handlePlayMusic = async (song: IMusic) => {
         if (!user && song.isPremium)
             return toast({
                 variant: 'destructive',
                 title: 'Error',
-                description: 'Need login to listen this music',
+                description: 'Need login to action',
             })
         if (!user?.isPremium && song.isPremium)
             return toast({
                 variant: 'destructive',
                 title: 'Error',
-                description: 'Need buy premium to listen this music',
+                description: 'Need buy premium to action',
             })
         dispatch(currentSong({song, listSong}))
     }
@@ -71,6 +100,26 @@ const ListMusic = ({listSong}: Props) => {
         }
     }
 
+    const handleAddPlaylist = async () => {
+        setIsLoading(true)
+        try {
+            await dispatch(addToPlaylist(data))
+            setIsLoading(false)
+            toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Add song to playlist success`,
+            })
+        } catch (error) {
+            setIsLoading(false)
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: `Can't add to playlist`,
+            })
+        }
+    }
+
     return (
         <ul className={`${music ? 'h-4/6' : 'h-5/6'} mt-4 fixed w-4/5`}>
             <ScrollArea className='h-full'>
@@ -108,8 +157,68 @@ const ListMusic = ({listSong}: Props) => {
                             <div className='col-span-1 flex items-center justify-center text-xl'>
                                 {formatTime(song.duration)}
                             </div>
-                            <div className='col-span-1 flex items-center justify-center'>
+                            <div className='col-span-1 flex items-center justify-center gap-4'>
                                 <ArrowDownToLine onClick={() => handleDownload(song)} />
+                                <HoverCard>
+                                    <HoverCardTrigger>
+                                        <MoreHorizontal />
+                                    </HoverCardTrigger>
+                                    <HoverCardContent align='end' className='max-w-fit border-none'>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    variant='default'
+                                                    className='bg-white text-background hover:bg-secondary hover:text-white'
+                                                    onClick={() => setData({...data, mediaId: song.id})}
+                                                >
+                                                    Thêm vào danh sách
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                                                <DialogHeader>
+                                                    <DialogTitle>Danh Sách</DialogTitle>
+                                                    <DialogDescription>
+                                                        Thêm vào sách bài hát theo sở thích của chính bạn
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div className='grid w-full max-w-sm items-center gap-2'>
+                                                    <Label htmlFor='name'>Tên Danh Sách</Label>
+                                                    <Select
+                                                        onValueChange={(playListId) => setData({...data, playListId})}
+                                                    >
+                                                        <SelectTrigger className='w-full bg-white'>
+                                                            <SelectValue placeholder='Chọn danh sách phát' />
+                                                        </SelectTrigger>
+                                                        <SelectContent>
+                                                            <SelectGroup>
+                                                                <SelectLabel>Danh Sách</SelectLabel>
+                                                                {myList.map((item) => {
+                                                                    return (
+                                                                        <SelectItem key={item.id} value={item.id}>
+                                                                            {item.name}
+                                                                        </SelectItem>
+                                                                    )
+                                                                })}
+                                                            </SelectGroup>
+                                                        </SelectContent>
+                                                    </Select>
+                                                </div>
+
+                                                <DialogFooter>
+                                                    {isLoading ?
+                                                        <Button disabled>
+                                                            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                                            Please wait
+                                                        </Button>
+                                                    :   <Button type='button' onClick={handleAddPlaylist}>
+                                                            Tạo
+                                                        </Button>
+                                                    }
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </HoverCardContent>
+                                </HoverCard>
                             </div>
                         </li>
                     )

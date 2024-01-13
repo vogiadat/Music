@@ -2,7 +2,23 @@ import {endPoint, errorValue} from '@/utils/constant'
 import {Link} from 'react-router-dom'
 import {useAppDispatch} from '@/app/hook'
 import {IPlaylist} from '@/types/playlist'
-import {detail} from '@/features/playlistSlice'
+import {detailPlayList} from '@/features/playlistSlice'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import {Button} from '@/components/ui/button'
+import {Label} from '@/components/ui/label'
+import {Input} from '@/components/ui/input'
+import {Loader2} from 'lucide-react'
+import {useState} from 'react'
+import {createPlaylist} from '@/services/playlist.service'
+import {useToast} from '@/components/ui/use-toast'
 
 type Props = {
     title: string
@@ -11,11 +27,79 @@ type Props = {
 
 const List = ({title, list}: Props) => {
     const dispatch = useAppDispatch()
+    const {toast} = useToast()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [playlistName, setPlaylistName] = useState<string>('')
+
+    const handlePlaylist = async () => {
+        setIsLoading(true)
+        try {
+            await createPlaylist(playlistName)
+            setIsLoading(false)
+            toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Create ${playlistName} success`,
+            })
+        } catch (error) {
+            setIsLoading(false)
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: `Error: Can't create ${playlistName}`,
+            })
+        }
+    }
+
+    const handleSingle = (item: IPlaylist) => {
+        const value: IPlaylist = {
+            ...item,
+            image: item.playlistAndMusics.at(0)?.media.image,
+        }
+        dispatch(detailPlayList(value))
+    }
 
     return (
         <>
-            <div className='ml-6'>
+            <div className='ml-6 flex justify-between'>
                 <b className='text-4xl font-extrabold'>{title}</b>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button
+                            variant='default'
+                            className='bg-white text-background hover:bg-secondary hover:text-white'
+                        >
+                            Tạo Danh Sách
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                        <DialogHeader>
+                            <DialogTitle>Tạo Danh Sách</DialogTitle>
+                            <DialogDescription>Tạo danh sách bài hát theo sở thích của chính bạn</DialogDescription>
+                        </DialogHeader>
+                        <div className='grid w-full max-w-sm items-center gap-2'>
+                            <Label htmlFor='name'>Tên Danh Sách</Label>
+                            <Input
+                                id='name'
+                                value={playlistName}
+                                onChange={(e) => setPlaylistName(e.target.value)}
+                                className='bg-white text-background'
+                            />
+                        </div>
+
+                        <DialogFooter>
+                            {isLoading ?
+                                <Button disabled>
+                                    <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                    Please wait
+                                </Button>
+                            :   <Button type='button' onClick={handlePlaylist}>
+                                    Tạo
+                                </Button>
+                            }
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </div>
             <div className={`w-full h-[850px] overflow-y-scroll`}>
                 <div className='m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14'>
@@ -23,12 +107,16 @@ const List = ({title, list}: Props) => {
                         <Link
                             to={endPoint.playlist.concat(`/${item.id}`)}
                             key={item.id}
-                            onClick={() => dispatch(detail(item))}
+                            onClick={() => handleSingle(item)}
                         >
                             <div className='bg-background rounded-xl h-80 max-2xl:h-60'>
                                 <div className='p-6 max-2xl:p-4 mx-auto'>
                                     <img
-                                        src={item.playlistAndMusics[0].media.image || ''}
+                                        src={
+                                            item.playlistAndMusics.length > 0 ?
+                                                item.playlistAndMusics.at(0)?.media.image
+                                            :   ''
+                                        }
                                         className='rounded-xl h-52 max-2xl:h-40 w-full overflow-hidden object-cover'
                                         onError={({currentTarget}) => {
                                             currentTarget.onerror = null // prevents looping

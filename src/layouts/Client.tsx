@@ -17,6 +17,7 @@ import {auth, logout, openLogin} from '@/features/authSlice'
 import {getFavor} from '@/features/favorSlice'
 import {Button} from '@/components/ui/button'
 import Auth from '@/pages/Auth'
+import {myPlayList} from '@/features/playlistSlice'
 
 const navbarList = [
     {
@@ -68,6 +69,7 @@ const Client = () => {
     useEffect(() => {
         dispatch(auth())
         dispatch(getFavor())
+        dispatch(myPlayList())
     }, [dispatch])
 
     return (
