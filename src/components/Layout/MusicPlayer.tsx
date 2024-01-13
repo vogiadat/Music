@@ -7,8 +7,9 @@ import {useToast} from '../ui/use-toast'
 import {addFavor, delFavor} from '@/features/favorSlice'
 import {getComment, sendComment} from '@/services/comment.service'
 import {addDownload} from '@/services/download.service'
+import {addHistory} from '@/services/history.service'
+import {increaseListenMusic} from '@/services/music.service'
 
-//TODO: not yet addHistory
 const MusicPlayer = () => {
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
@@ -106,10 +107,15 @@ const MusicPlayer = () => {
         setIsShuffle(!isShuffle)
     }
 
-    const handleEnded = () => {
+    const handlePlay = async (id: string) => {
+        return await addHistory(id)
+    }
+
+    const handleEnded = async () => {
         if (!isLoop) {
             handleNextSong()
         }
+        if (initMusic) return await increaseListenMusic(initMusic.id)
     }
 
     const handleDownload = async (song: IMusic) => {
@@ -180,7 +186,9 @@ const MusicPlayer = () => {
     }
 
     useEffect(() => {
-        if (music) setInitMusic(music)
+        if (music) {
+            setInitMusic(music)
+        }
         if (!audio.current) return
         if (audio.current.volume !== volume) audio.current.volume = volume / 100
         if (!isPlay) return audio.current.pause()
@@ -204,6 +212,7 @@ const MusicPlayer = () => {
             setIsPlay(false)
             return audio.current.pause()
         }
+
         audio.current.play()
     }, [toast, isPlay, user, volume, currentTime, music, initMusic])
 
@@ -214,6 +223,7 @@ const MusicPlayer = () => {
                     <audio
                         ref={audio}
                         src={initMusic?.src || music.src}
+                        onPlay={() => handlePlay(initMusic?.id || music.id)}
                         onTimeUpdate={handleTime}
                         onEnded={handleEnded}
                     />

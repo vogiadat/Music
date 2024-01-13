@@ -37,7 +37,7 @@ const SingleArtist = () => {
                     image: artist.avatar,
                 })
         })
-    }, [artistId, content])
+    }, [artistId])
 
     return (
         <>

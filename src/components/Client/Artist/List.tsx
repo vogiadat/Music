@@ -1,3 +1,4 @@
+import {useAppSelector} from '@/app/hook'
 import {formatListened, formatName} from '@/hooks/functions'
 import {IUser} from '@/types/user'
 import {errorValue} from '@/utils/constant'
@@ -10,14 +11,15 @@ type Props = {
 
 const ListCard = ({title, list}: Props) => {
     const {pathname} = useLocation()
+    const {music} = useAppSelector((state) => state.music)
 
     return (
         <>
             <div className='ml-6'>
                 <b className='text-4xl font-extrabold'>{title}</b>
             </div>
-            <div className={`w-full h-[850px] overflow-y-scroll`}>
-                <div className='m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14'>
+            <div className={`w-full ${music && 'max-h-[700px]'} h-5/6 overflow-y-scroll`}>
+                <div className={`h-full m-10 mx-20 max-2xl:mx-10 grid grid-cols-5 gap-14`}>
                     {list &&
                         list.map((item) => (
                             <Link to={pathname.concat(`/${item.id}`)} key={item.id}>

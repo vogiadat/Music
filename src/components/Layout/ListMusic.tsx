@@ -121,7 +121,7 @@ const ListMusic = ({listSong}: Props) => {
     }
 
     return (
-        <ul className={`${music ? 'h-4/6' : 'h-5/6'} mt-4 fixed w-4/5`}>
+        <ul className={`${music ? 'h-4/6' : 'h-full'}  mt-4 fixed w-4/5`}>
             <ScrollArea className='h-full'>
                 {listSong.map((song: IMusic, index: number) => {
                     return (

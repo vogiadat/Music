@@ -11,6 +11,11 @@ export const getMusicByArtist = async (id: string) => {
     return res.data
 }
 
+export const increaseListenMusic = async (id: string) => {
+    const res = await api.patch(`/media/increase/${id}`)
+    return res.data
+}
+
 export const getAllAlbums = async () => {
     const res = await api.get<ResponseSuccess<IAlbum[]>>('/album/singer')
     return res.data

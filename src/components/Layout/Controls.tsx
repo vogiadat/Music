@@ -80,7 +80,7 @@ const Player = ({
 }: Props) => {
     return (
         <>
-            <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-36 max-h-36 max-2xl:h-20'>
+            <div className='bg-background fixed z-20 inset-x-0 bottom-0 grid grid-cols-12 items-center text-white h-32 max-h-32 max-2xl:h-20'>
                 <div className='col-span-3 flex justify-evenly gap-2 items-center max-2xl:mb-3 mx-5'>
                     <div className='h-28 w-28 max-2xl:w-14 max-2xl:h-14 rounded-lg overflow-hidden shadow shadow-gray-900'>
                         <img

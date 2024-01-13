@@ -77,7 +77,7 @@ const Client = () => {
             <Toaster />
             <div className='grid grid-cols-12 fixed z-20 inset-0 bg-black text-white'>
                 <Sidebar />
-                <div className='md:col-span-10 col-span-12'>
+                <div className='md:col-span-10 col-span-12 relative'>
                     <div className='grid grid-cols-12 py-5'>
                         <div className='md:col-span-4 md:block hidden'>
                             <ul className='flex justify-evenly text-xl font-medium uppercase'>
@@ -188,7 +188,7 @@ const Client = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='z-10 p-5'>
+                    <div className='z-10 p-5 sticky inset-0'>
                         <Outlet />
                     </div>
                 </div>
