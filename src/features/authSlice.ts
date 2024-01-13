@@ -15,12 +15,14 @@ type TUser = {
 export interface AuthState {
     accessToken: string
     user: IUser | null
+    isLogin: boolean
 }
 
 // Define the initial state using that type
 const initialState: AuthState = {
     accessToken: '',
     user: null,
+    isLogin: true,
 }
 
 export const authSlice = createSlice({
@@ -28,22 +30,42 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         authLogin: (state, action) => {
-            state.accessToken = action.payload.accessToken
-            state.user = action.payload.element
+            {
+                return {
+                    ...state,
+                    accessToken: action.payload.accessToken,
+                    user: action.payload.element,
+                }
+            }
         },
         logout: (state) => {
             localStorage.removeItem(CLIENT_TOKEN)
-            state.accessToken = ''
-            state.user = null
+            return {
+                ...state,
+                accessToken: '',
+                user: null,
+            }
+        },
+        openLogin: (state) => {
+            return {
+                ...state,
+                isLogin: true,
+            }
+        },
+        openRegister: (state) => {
+            return {
+                ...state,
+                isLogin: false,
+            }
         },
     },
 })
 
-export const {authLogin, logout} = authSlice.actions
+export const {authLogin, logout, openLogin, openRegister} = authSlice.actions
 
 export default authSlice.reducer
 
-export const auth = createAsyncThunk('auth/authsync', async (_params, thunkApi) => {
+export const auth = createAsyncThunk<void, void>('auth/user', async (_, thunkApi) => {
     const token = localStorage.getItem(CLIENT_TOKEN)
     try {
         const {element} = await getMe()
@@ -54,7 +76,7 @@ export const auth = createAsyncThunk('auth/authsync', async (_params, thunkApi) 
     }
 })
 
-export const login = createAsyncThunk('auth/loginAsync', async ({email, password}: TUser, thunkApi) => {
+export const login = createAsyncThunk('auth/login', async ({email, password}: TUser, thunkApi) => {
     const params = {email, password}
     const {accessToken} = await Login(params)
     localStorage.setItem(CLIENT_TOKEN, accessToken)
@@ -66,7 +88,7 @@ export const login = createAsyncThunk('auth/loginAsync', async ({email, password
     }
 })
 
-export const register = createAsyncThunk('auth/registerAsync', async ({email, password}: TUser, thunkApi) => {
+export const register = createAsyncThunk('auth/register', async ({email, password}: TUser, thunkApi) => {
     const params = {email, password}
     await Register(params).then(async () => {
         const {accessToken} = await Login(params)

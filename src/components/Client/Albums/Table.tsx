@@ -20,7 +20,7 @@ import {IMusic, Music} from '@/types/music'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {currentSong} from '@/features/musicSlice'
 import {errorValue} from '@/utils/constant'
-import {useToast} from '../ui/use-toast'
+import {useToast} from '@/components/ui/use-toast'
 import {formatTime} from '@/hooks/functions'
 
 type Props = {

@@ -5,8 +5,10 @@ import {IComment, IMusic} from '@/types/music'
 import {setCurrentSong} from '@/features/musicSlice'
 import {useToast} from '../ui/use-toast'
 import {addFavor, delFavor} from '@/features/favorSlice'
-import {addDownload, getComment, sendComment} from '@/services/music.service'
-// not yet addHistory
+import {getComment, sendComment} from '@/services/comment.service'
+import {addDownload} from '@/services/download.service'
+
+//TODO: not yet addHistory
 const MusicPlayer = () => {
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)

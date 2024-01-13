@@ -1,19 +1,19 @@
 import * as z from 'zod'
 import {zodResolver} from '@hookform/resolvers/zod'
-import {useForm} from 'react-hook-form'
 import {Button} from '@/components/ui/button'
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form'
 import {Input} from '@/components/ui/input'
 import {Switch} from '@/components/ui/switch'
 import {DialogContent} from '@/components/ui/dialog'
 import {useToast} from '@/components/ui/use-toast'
-import {IUser} from '@/types/user'
-import {buytPremium} from '@/services/user.service'
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '../ui/tabs'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {useState} from 'react'
-import {upload} from '@/services/music.service'
+import {useForm} from 'react-hook-form'
+import {IUser} from '@/types/user'
 import {Loader2} from 'lucide-react'
-import {updateProfile} from '../../services/user.service'
+import {upload} from '@/services/upload.service'
+import {updateProfile} from '@/services/user.service'
+import {buyPremium} from '@/services/user.service'
 
 const formSchema = z.object({
     email: z.string(),
@@ -45,7 +45,7 @@ const Profile = ({user}: Props) => {
 
     const handlePremium = async () => {
         const link = document.createElement('a')
-        await buytPremium().then((res) => {
+        await buyPremium().then((res) => {
             // window.location.href = res.element
             link.href = res.element
             link.target = '_blank'

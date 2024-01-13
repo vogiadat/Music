@@ -1,4 +1,4 @@
-import ListCard from '@/components/Layout/ListCard'
+import {List} from '@/components/Client/Albums'
 import {getAllAlbums} from '@/services/music.service'
 import {IAlbum} from '@/types/music'
 import {useEffect, useState} from 'react'
@@ -13,7 +13,7 @@ const Albums = () => {
 
     return (
         <>
-            <ListCard title='Albums' list={listAlbum} />
+            <List title='Albums' list={listAlbum} />
         </>
     )
 }

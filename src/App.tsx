@@ -12,11 +12,13 @@ import Home from '@/pages/Home'
 import Music from '@/pages/Music'
 import Artist from '@/pages/Artist'
 import Trend from '@/pages/Trend'
-
-import SingleArtist from './components/Client/SingleArtist'
-import SingleAlbum from './components/Client/SingleAlbum'
 import Category from './pages/Category'
-import SingleCategory from './components/Client/SingleCategory'
+
+import {Single as SingleArtist} from './components/Client/Artist'
+import {Single as SingleAlbum} from './components/Client/Albums'
+import {Single as SingleCategory} from './components/Client/Category'
+import {Single as SinglePlayList} from './components/Client/PlayList'
+import MyPlaylist from './pages/MyPlaylist'
 
 const App = () => {
     return (
@@ -44,6 +46,10 @@ const App = () => {
                 <Route path='category'>
                     <Route path='' element={<Category />} />
                     <Route path=':id' element={<SingleCategory />} />
+                </Route>
+                <Route path='playlist'>
+                    <Route path=':id' element={<SinglePlayList />} />
+                    <Route path='my-list' element={<MyPlaylist />} />
                 </Route>
                 {/* Single */}
             </Route>

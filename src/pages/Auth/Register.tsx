@@ -7,10 +7,9 @@ import {Input} from '@/components/ui/input'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Separator} from '@/components/Layout/UI'
 import {DialogContent} from '@/components/ui/dialog'
-import {MouseEventHandler} from 'react'
 import {useAppDispatch} from '@/app/hook'
 import {useToast} from '@/components/ui/use-toast'
-import {register} from '@/features/authSlice'
+import {openLogin, register} from '@/features/authSlice'
 
 const formSchema = z
     .object({
@@ -29,11 +28,7 @@ const formSchema = z
         path: ['rePassword'],
     })
 
-interface Props {
-    handleModal: MouseEventHandler
-}
-
-const Register = ({handleModal}: Props) => {
+const Register = () => {
     const {toast} = useToast()
     const dispatch = useAppDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -44,6 +39,10 @@ const Register = ({handleModal}: Props) => {
             rePassword: '',
         },
     })
+
+    const handleModal = () => {
+        dispatch(openLogin())
+    }
 
     const onSubmit = async () => {
         const {email, password} = form.getValues()
@@ -154,8 +153,8 @@ const Register = ({handleModal}: Props) => {
                             <Separator />
                             <div className='text-center font-extrabold text-zinc-400'>Have an account?</div>
                             <button
-                                onClick={handleModal}
                                 className='w-full text-center border border-zinc-400 p-2 hover:cursor-pointer text-zinc-400 font-medium uppercase rounded-3xl flex items-center justify-center transition-colors duration-150 ease-linear'
+                                onClick={handleModal}
                             >
                                 Login for Life & music
                             </button>

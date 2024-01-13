@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {useToast} from '../ui/use-toast'
 import {ScrollArea} from '@/components/ui/scroll-area'
 import {formatTime} from '@/hooks/functions'
-import {addDownload} from '@/services/music.service'
+import {addDownload} from '@/services/download.service'
 
 type Props = {
     listSong: IMusic[]

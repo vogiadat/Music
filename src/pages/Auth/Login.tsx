@@ -6,11 +6,10 @@ import {Form, FormControl, FormField, FormDescription, FormItem, FormLabel, Form
 import {Input} from '@/components/ui/input'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Separator} from '@/components/Layout/UI'
-import {login} from '@/features/authSlice'
+import {login, openRegister} from '@/features/authSlice'
 import {useAppDispatch} from '@/app/hook'
 import {DialogContent} from '@/components/ui/dialog'
 import {useToast} from '@/components/ui/use-toast'
-import {MouseEventHandler} from 'react'
 
 const formSchema = z.object({
     email: z.string().min(1, {message: 'Email is required!!'}).email({message: 'Email/Password is invaild'}),
@@ -20,11 +19,7 @@ const formSchema = z.object({
         .min(4, {message: 'Password must be at least 4 characters.'}),
 })
 
-interface Props {
-    handleModal: MouseEventHandler
-}
-
-const Login = ({handleModal}: Props) => {
+const Login = () => {
     const {toast} = useToast()
     const dispatch = useAppDispatch()
     const form = useForm<z.infer<typeof formSchema>>({
@@ -34,6 +29,10 @@ const Login = ({handleModal}: Props) => {
             password: '',
         },
     })
+
+    const handleModal = () => {
+        dispatch(openRegister())
+    }
 
     const onSubmit = async () => {
         const res = (await dispatch(login(form.getValues()))) as unknown
@@ -128,8 +127,8 @@ const Login = ({handleModal}: Props) => {
                             <Separator />
                             <div className='text-center font-extrabold text-zinc-400'>Don't have an account?</div>
                             <button
-                                onClick={handleModal}
                                 className='w-full text-center border border-zinc-400 p-2 hover:cursor-pointer text-zinc-400 font-medium uppercase rounded-3xl flex items-center justify-center transition-colors duration-150 ease-linear'
+                                onClick={handleModal}
                             >
                                 Sign up for Life & music
                             </button>

@@ -29,28 +29,26 @@ export default favorSlice.reducer
 export const addFavor = createAsyncThunk('favor/add', async (id: string, thunkApi) => {
     try {
         await addToFavor(id)
-        const res = await getMyFavor()
-        thunkApi.dispatch(list(res.element.rows))
-    } catch (err) {
-        console.log(err)
+        thunkApi.dispatch(getFavor())
+    } catch (error) {
+        return thunkApi.rejectWithValue(error)
     }
 })
 
 export const delFavor = createAsyncThunk('favor/remove', async (id: string, thunkApi) => {
     try {
         await delFromFavor(id)
-        const res = await getMyFavor()
-        thunkApi.dispatch(list(res.element.rows))
+        thunkApi.dispatch(getFavor())
     } catch (error) {
-        console.log(error)
+        return thunkApi.rejectWithValue(error)
     }
 })
 
-export const getFavor = createAsyncThunk('favor/list', async (_param, thunkApi) => {
+export const getFavor = createAsyncThunk<void, void>('favor/list', async (_, thunkApi) => {
     try {
         const res = await getMyFavor()
         thunkApi.dispatch(list(res.element.rows))
     } catch (error) {
-        console.log(error)
+        return thunkApi.rejectWithValue(error)
     }
 })

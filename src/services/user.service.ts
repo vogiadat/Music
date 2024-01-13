@@ -11,7 +11,7 @@ export const getAllArtist = async () => {
     return res.data
 }
 
-export const buytPremium = async () => {
+export const buyPremium = async () => {
     const res = await api.post<ResponseSuccess<string>>('/payment')
     return res.data
 }

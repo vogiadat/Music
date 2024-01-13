@@ -1,22 +1,42 @@
+import {useEffect, useState} from 'react'
 import {IMusic} from '@/types/music'
-import {Heart, MoreHorizontal, Music2, PlayCircle, Search} from 'lucide-react'
-import TableMusic from './TableMusic'
 import {IContent} from '@/types/content'
+import {useAppSelector} from '@/app/hook'
 import {endPoint, errorValue} from '@/utils/constant'
-import {Link} from 'react-router-dom'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
+import {Heart, MoreHorizontal, Music2, PlayCircle, Search} from 'lucide-react'
+import Table from './Table'
+import {Link} from 'react-router-dom'
 
 interface Music {
     index: number
     song: IMusic
 }
 
-type Props = {
-    data: Music[]
-    content: IContent
-}
+const SingleAlbum = () => {
+    const {album} = useAppSelector((state) => state.music)
+    const [data, setData] = useState<Music[]>([])
+    const [content, setContent] = useState<IContent>({page: 'ALBUM', title: '', subtitle: '', image: ''})
 
-const Content = ({data, content}: Props) => {
+    useEffect(() => {
+        if (!album) return
+        setContent({
+            ...content,
+            title: album.name,
+            subtitle: album.author?.firstName || '',
+            image: album.image,
+        })
+        if (!album.medias) return setData([])
+        setData(
+            album.medias.map((song, index) => {
+                return {
+                    index,
+                    song,
+                }
+            }),
+        )
+    }, [album])
+
     return (
         <>
             <div
@@ -79,7 +99,7 @@ const Content = ({data, content}: Props) => {
                 </div>
                 <div className=''>
                     {data ?
-                        <TableMusic data={data} />
+                        <Table data={data} />
                     :   <div className='h-[420px] bg-gradient-to-b from-background grid text-center mt-5 border border-background '>
                             <Music2 size={80} className='mx-auto mt-16 ' />
                             <b className='text-4xl font-bold'>Songs you like will appear here</b>
@@ -98,4 +118,4 @@ const Content = ({data, content}: Props) => {
     )
 }
 
-export default Content
+export default SingleAlbum

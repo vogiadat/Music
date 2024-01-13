@@ -1,28 +1,25 @@
-import ListMusic from '@/components/Layout/ListMusic'
-import {DownloadIcon} from 'lucide-react'
-import {Link} from 'react-router-dom'
-import {IMusic} from '../types/music'
-import {useEffect, useState} from 'react'
-import {getDownload} from '@/services/download.service'
-import {endPoint} from '@/utils/constant'
-import {Dialog, DialogTrigger} from '@/components/ui/dialog'
-import Auth from './Auth'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
+import {List} from '@/components/Client/PlayList'
+import {Dialog, DialogTrigger} from '@/components/ui/dialog'
+import {myPlayList} from '@/features/playlistSlice'
+import {endPoint} from '@/utils/constant'
+import {ListVideo} from 'lucide-react'
+import {useEffect} from 'react'
+import {Link} from 'react-router-dom'
+import Auth from './Auth'
 import {openLogin} from '@/features/authSlice'
 
-const Download = () => {
+const MyPlaylist = () => {
     const dispatch = useAppDispatch()
+    const {playlist} = useAppSelector((state) => state.playlist)
     const {user} = useAppSelector((state) => state.auth)
-    const [listSong, setListSong] = useState<IMusic[]>([])
 
     const handleModal = () => {
         dispatch(openLogin())
     }
 
     useEffect(() => {
-        getDownload().then((res) => {
-            setListSong(res.rows.map((item) => item.media))
-        })
+        dispatch(myPlayList())
     }, [])
 
     return (
@@ -30,9 +27,9 @@ const Download = () => {
             {!user ?
                 <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                     <div className='grid gap-3 text-center'>
-                        <DownloadIcon size={80} className='mx-auto' />
-                        <b className='text-4xl font-bold'>Let’s download new song</b>
-                        <p className='text-xl'>Need to login to download</p>
+                        <ListVideo size={80} className='mx-auto' />
+                        <b className='text-4xl font-bold'>Let’s create new playlist</b>
+                        <p className='text-xl'>Need to login to playlist</p>
                         <Dialog>
                             <DialogTrigger>
                                 <div
@@ -46,12 +43,11 @@ const Download = () => {
                         </Dialog>
                     </div>
                 </div>
-            : listSong.length <= 0 ?
+            : playlist.length <= 0 ?
                 <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
                     <div className='grid gap-3 text-center'>
-                        <DownloadIcon size={80} className='mx-auto' />
-                        <b className='text-4xl font-bold'>Let’s download new song</b>
-                        <p className='text-xl'>Need to login to download</p>
+                        <ListVideo size={80} className='mx-auto' />
+                        <b className='text-4xl font-bold'>Let’s create new playlist</b>
                         <Link
                             to={endPoint.music}
                             className='mx-auto text-center bg-secondary py-2 px-3 rounded-xl hover:opacity-80'
@@ -60,17 +56,9 @@ const Download = () => {
                         </Link>
                     </div>
                 </div>
-            :   <div className='ml-6'>
-                    <div>
-                        <b className='text-4xl font-extrabold'>Download</b>
-                    </div>
-                    <div className={`w-full h-[850px] overflow-y-scroll`}>
-                        <ListMusic listSong={listSong} />
-                    </div>
-                </div>
-            }
+            :   <List title='Danh Sách Phát' list={playlist} />}
         </>
     )
 }
 
-export default Download
+export default MyPlaylist

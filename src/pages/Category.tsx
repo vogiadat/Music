@@ -1,4 +1,4 @@
-import ListCard from '@/components/Layout/ListCard'
+import {List} from '@/components/Client/Category'
 import {getAllCategory} from '@/services/category.service'
 import {IAlbum} from '@/types/music'
 import {useEffect, useState} from 'react'
@@ -15,7 +15,7 @@ const Category = () => {
 
     return (
         <>
-            <ListCard title='Thể Loại' list={list} />
+            <List title='Thể Loại' list={list} />
         </>
     )
 }

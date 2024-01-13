@@ -3,8 +3,8 @@ import {CheckCircle, Play} from 'lucide-react'
 import {Link} from 'react-router-dom'
 import {useState, useEffect} from 'react'
 import {IMusic} from '@/types/music'
-import {getAllTrending} from '@/services/music.service'
-import {endPoint, errorValue} from '@/utils/constant'
+import {getAllTrending} from '@/services/favor.service'
+import {endPoint, errorValue, slick} from '@/utils/constant'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -15,32 +15,12 @@ import {getAllArtist} from '@/services/user.service'
 import {IUser} from '@/types/user'
 
 const Home = () => {
+    const dispatch = useAppDispatch()
     const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
-    const dispatch = useAppDispatch()
     const [trend, setTrend] = useState<IMusic>()
     const [listSong, setListSong] = useState<IMusic[]>([])
     const [listArtist, setListArtist] = useState<IUser[]>([])
-    const settingSong = {
-        infinite: true,
-        autoplaySpeed: 3000,
-        autoplay: true,
-        lazyload: true,
-        arrows: false,
-        slidesToShow: 3,
-        slidesToScroll: 2,
-        variableWidth: true,
-    }
-    const settingAritist = {
-        infinite: true,
-        autoplaySpeed: 2500,
-        autoplay: true,
-        lazyload: true,
-        arrows: false,
-        slidesToShow: 5,
-        slidesToScroll: 2,
-        variableWidth: true,
-    }
 
     useEffect(() => {
         getAllTrending().then((res) => {
@@ -117,7 +97,7 @@ const Home = () => {
                             </Link>
                         </div>
                         <div className='py-2'>
-                            <Slider {...settingSong} className='w-max -ml-1'>
+                            <Slider {...slick.song} className='w-max -ml-1'>
                                 {listSong?.map((song: IMusic) => (
                                     <div
                                         key={song.id}
@@ -159,7 +139,7 @@ const Home = () => {
                             </Link>
                         </div>
                         <div className='h-44 max-2xl:h-36'>
-                            <Slider {...settingAritist} className='w-full'>
+                            <Slider {...slick.artist} className='w-full'>
                                 {listArtist &&
                                     listArtist.map((artist) => (
                                         <Link

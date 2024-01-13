@@ -1,7 +1,7 @@
 import {IMusic} from '@/types/music'
 import ListMusic from '@/components/Layout/ListMusic'
 import {useEffect, useState} from 'react'
-import {getAllTrending} from '@/services/music.service'
+import {getAllTrending} from '@/services/favor.service'
 
 const Trend = () => {
     const [listSong, setListSong] = useState<IMusic[]>([])

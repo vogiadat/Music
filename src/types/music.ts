@@ -41,14 +41,6 @@ export interface IDataUpload {
     albumId?: string
 }
 
-export interface IPlaylist {
-    rows: IMusic[]
-    total: number
-    skip: number
-    limit: number
-    page: number
-}
-
 export interface IComment {
     id: string
     mediaId: string

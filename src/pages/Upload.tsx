@@ -4,7 +4,7 @@ import {Link} from 'react-router-dom'
 import {Input} from '@/components/ui/input'
 import {useEffect, useState} from 'react'
 import {IDataUpload, IMusic} from '@/types/music'
-import {createMusic, getMyMusic, upload} from '@/services/music.service'
+import {createMusic, getMyMusic, upload} from '@/services/upload.service'
 import ListMusic from '@/components/Layout/ListMusic'
 import {Button} from '@/components/ui/button'
 import {

@@ -30,7 +30,7 @@ export interface ResponseSuccess<T> {
     element: T
 }
 
-export interface ResPaginationSuccess<T> {
+export interface PaginationSuccess<T> {
     status: number
     message: string
     element: {

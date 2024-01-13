@@ -1,6 +1,4 @@
 import Sidebar from '@/components/Client/Sidebar'
-import Login from '@/pages/Auth/Login'
-import Register from '@/pages/Auth/Register'
 import MusicPlayer from '@/components/Layout/MusicPlayer'
 import Profile from '@/components/Client/Profile'
 import {HoverCard, HoverCardContent, HoverCardTrigger} from '@/components/ui/hover-card'
@@ -15,9 +13,10 @@ import {Search, Menu, ChevronDown, User, CheckCircle} from 'lucide-react'
 import {endPoint, errorValue} from '@/utils/constant'
 import {formatName} from '@/hooks/functions'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
-import {auth, logout} from '@/features/authSlice'
+import {auth, logout, openLogin} from '@/features/authSlice'
 import {getFavor} from '@/features/favorSlice'
 import {Button} from '@/components/ui/button'
+import Auth from '@/pages/Auth'
 
 const navbarList = [
     {
@@ -39,15 +38,15 @@ const navbarList = [
 ]
 
 const Client = () => {
-    const {toast} = useToast()
     const dispatch = useAppDispatch()
+    const {toast} = useToast()
     const {user} = useAppSelector((state) => state.auth)
     const {pathname} = useLocation()
-    const [isLogin, setIsLogin] = useState(true)
     const [search, setSearch] = useState('')
     const navigate = useNavigate()
-    const handleLogin = () => {
-        setIsLogin(!isLogin)
+
+    const handleModal = () => {
+        dispatch(openLogin())
     }
 
     const handleLogout = () => {
@@ -174,15 +173,13 @@ const Client = () => {
                                         </HoverCard>
                                     :   <Dialog>
                                             <DialogTrigger>
-                                                <Avatar>
+                                                <Avatar onClick={handleModal}>
                                                     <AvatarFallback className='text-background text-center hover:cursor-pointer'>
                                                         <User />
                                                     </AvatarFallback>
                                                 </Avatar>
                                             </DialogTrigger>
-                                            {isLogin ?
-                                                <Login handleModal={handleLogin} />
-                                            :   <Register handleModal={handleLogin} />}
+                                            <Auth />
                                         </Dialog>
                                     }
                                 </div>

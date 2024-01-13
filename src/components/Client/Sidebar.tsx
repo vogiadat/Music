@@ -1,6 +1,6 @@
 import {endPoint} from '@/utils/constant'
-import {Disc3, Download, Heart, History, Home, Upload} from 'lucide-react'
-import {Link} from 'react-router-dom'
+import {Disc3, Download, Heart, History, Home, ListVideo} from 'lucide-react'
+import {Link, useLocation} from 'react-router-dom'
 
 const sideMenu = [
     {
@@ -22,6 +22,11 @@ const sideMenu = [
         title: 'Thư Viện',
         list: [
             {
+                title: 'Danh Sách Phát',
+                icon: <ListVideo />,
+                slug: endPoint.playlist.concat('/my-list'),
+            },
+            {
                 title: 'Lịch Sử',
                 icon: <History />,
                 slug: endPoint.recent,
@@ -36,16 +41,17 @@ const sideMenu = [
                 icon: <Download />,
                 slug: endPoint.download,
             },
-            {
-                title: 'Đăng Tải',
-                icon: <Upload />,
-                slug: endPoint.upload,
-            },
+            // {
+            //     title: 'Đăng Tải',
+            //     icon: <Upload />,
+            //     slug: endPoint.upload,
+            // },
         ],
     },
 ]
 
 const Sidebar = () => {
+    const {pathname} = useLocation()
     return (
         <>
             <div className='md:col-span-2 bg-sidebar border border-r md:block hidden'>
@@ -61,7 +67,9 @@ const Sidebar = () => {
                                     {menu.list.map((item) => (
                                         <li key={item.title}>
                                             <Link
-                                                className='hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out flex items-center text-xl pl-12 py-3 max-lg:text-base max-2xl:py-2'
+                                                className={`${
+                                                    pathname === item.slug ? 'text-secondary' : ''
+                                                } hover:text-secondary hover:cursor-pointer transition-colors duration-150 ease-in-out flex items-center text-xl pl-12 py-3 max-lg:text-base max-2xl:py-2`}
                                                 to={item.slug}
                                             >
                                                 {item.icon}

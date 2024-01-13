@@ -1,8 +1,8 @@
-import api, {ResPaginationSuccess, ResponseSuccess} from '@/configs/axios'
+import api, {PaginationSuccess, ResponseSuccess} from '@/configs/axios'
 import {IAlbum} from '@/types/music'
 
 export const getAllCategory = async () => {
-    const res = await api.get<ResPaginationSuccess<IAlbum[]>>('/mediatype')
+    const res = await api.get<PaginationSuccess<IAlbum[]>>('/mediatype')
     return res.data
 }
 
