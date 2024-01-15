@@ -23,6 +23,17 @@ import {Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger}
 import {ScrollArea} from '../ui/scroll-area'
 import {Avatar, AvatarFallback, AvatarImage} from '../ui/avatar'
 import {Input} from '../ui/input'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import {Label} from '@/components/ui/label'
+import {Badge} from '@/components/ui/badge'
+import {Textarea} from '@/components/ui/textarea'
 
 type TSlider = (value: number[]) => void
 
@@ -108,19 +119,19 @@ const Player = ({
                                 <MoreHorizontal />
                             </DropdownMenuTrigger>
                             <DropdownMenuContent side='top' align='start'>
-                                <DropdownMenuItem onClick={() => handleDownload(song)}>Download</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDownload(song)}>Tải Xuống</DropdownMenuItem>
                                 <DropdownMenuItem asChild>
                                     <Sheet>
                                         <SheetTrigger
                                             className='mt-1 text-sm py-1 pl-2 text-left w-full rounded-sm hover:bg-secondary hover:text-white'
                                             onClick={() => handleComment(song.id)}
                                         >
-                                            Comment
+                                            Bình Luận
                                         </SheetTrigger>
                                         <SheetContent className='text-white border-0'>
                                             <SheetHeader>
                                                 <SheetTitle className='uppercase bg-zinc-800 text-white text-opacity-60 mx-auto text-center py-2 rounded-3xl w-5/6'>
-                                                    Comments
+                                                    Bình Luận
                                                 </SheetTitle>
                                             </SheetHeader>
                                             <ScrollArea className='grid gap-4 py-4'>
@@ -176,6 +187,64 @@ const Player = ({
                                             </SheetFooter>
                                         </SheetContent>
                                     </Sheet>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild>
+                                    <Dialog>
+                                        <DialogTrigger asChild>
+                                            <div className='mt-1 p-1 pl-2 text-sm text-left rounded-sm hover:bg-secondary hover:text-white'>
+                                                Chi Tiết
+                                            </div>
+                                        </DialogTrigger>
+                                        <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                                            <DialogHeader>
+                                                <DialogTitle>Bài Hát</DialogTitle>
+                                                <DialogDescription>Thông tin bài hát</DialogDescription>
+                                            </DialogHeader>
+                                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                                <Label htmlFor='name'>
+                                                    Bài Hát
+                                                    {song.isPremium && (
+                                                        <Badge className='ml-2 bg-secondary'>Premium</Badge>
+                                                    )}
+                                                </Label>
+                                                <Input
+                                                    id='name'
+                                                    className='bg-white text-background'
+                                                    defaultValue={song.name}
+                                                    disabled
+                                                />
+                                            </div>
+                                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                                <Label htmlFor='artist'>Ca Sĩ</Label>
+                                                <Input
+                                                    id='artist'
+                                                    className='bg-white text-background'
+                                                    defaultValue={
+                                                        song.author?.firstName || '' + song.author?.lastName || ''
+                                                    }
+                                                    disabled
+                                                />
+                                            </div>
+                                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                                <Label htmlFor='album'>Album</Label>
+                                                <Input
+                                                    id='desc'
+                                                    className='bg-white text-background'
+                                                    defaultValue={song.album?.name}
+                                                    disabled
+                                                />
+                                            </div>
+                                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                                <Label htmlFor='desc'>Nội Dung</Label>
+                                                <Textarea
+                                                    id='desc'
+                                                    className='bg-white text-background'
+                                                    defaultValue={song.desc}
+                                                    disabled
+                                                />
+                                            </div>
+                                        </DialogContent>
+                                    </Dialog>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

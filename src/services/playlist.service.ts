@@ -20,3 +20,8 @@ export const delSongFromPlaylist = async (id: string) => {
     const res = await api.delete(`/playlist/removePlaylistMusic/${id}`)
     return res.data
 }
+
+export const deletePlaylist = async (id: string) => {
+    const res = await api.delete(`/playlist/${id}`)
+    return res.data
+}

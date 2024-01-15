@@ -30,7 +30,19 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
 import {delFromPlaylist} from '@/features/playlistSlice'
+import {Label} from '@/components/ui/label'
+import {Input} from '@/components/ui/input'
+import {Textarea} from '@/components/ui/textarea'
+import {Badge} from '@/components/ui/badge'
 
 interface IData {
     id: string
@@ -208,9 +220,10 @@ type PAction = {
 
 export const Actions = ({music}: PAction) => {
     const dispatch = useAppDispatch()
+    const {id, song} = music
 
     const handleDelete = () => {
-        dispatch(delFromPlaylist(music.id))
+        dispatch(delFromPlaylist(id))
     }
 
     return (
@@ -225,6 +238,63 @@ export const Actions = ({music}: PAction) => {
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleDelete}>Xóa khỏi danh sách</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant='default'
+                                className='w-full bg-white text-background hover:bg-secondary hover:text-white'
+                            >
+                                Chi tiết bài hát
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                            <DialogHeader>
+                                <DialogTitle>Bài Hát</DialogTitle>
+                                <DialogDescription>Thông tin bài hát</DialogDescription>
+                            </DialogHeader>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='name'>
+                                    Bài Hát
+                                    {song.isPremium && <Badge className='ml-2 bg-secondary'>Premium</Badge>}
+                                </Label>
+                                <Input
+                                    id='name'
+                                    className='bg-white text-background'
+                                    defaultValue={song.name}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='artist'>Ca Sĩ</Label>
+                                <Input
+                                    id='artist'
+                                    className='bg-white text-background'
+                                    defaultValue={song.author?.firstName || '' + song.author?.lastName || ''}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='album'>Album</Label>
+                                <Input
+                                    id='desc'
+                                    className='bg-white text-background'
+                                    defaultValue={song.album?.name}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='desc'>Nội Dung</Label>
+                                <Textarea
+                                    id='desc'
+                                    className='bg-white text-background'
+                                    defaultValue={song.desc}
+                                    disabled
+                                />
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

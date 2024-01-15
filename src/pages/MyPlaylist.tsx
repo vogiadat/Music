@@ -1,9 +1,7 @@
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {List} from '@/components/Client/PlayList'
 import {Dialog, DialogTrigger} from '@/components/ui/dialog'
-import {endPoint} from '@/utils/constant'
 import {ListVideo} from 'lucide-react'
-import {Link} from 'react-router-dom'
 import Auth from './Auth'
 import {openLogin} from '@/features/authSlice'
 
@@ -35,19 +33,6 @@ const MyPlaylist = () => {
                             </DialogTrigger>
                             <Auth />
                         </Dialog>
-                    </div>
-                </div>
-            : myList.length <= 0 ?
-                <div className={`w-full h-[850px] overflow-y-scroll flex justify-center items-center`}>
-                    <div className='grid gap-3 text-center'>
-                        <ListVideo size={80} className='mx-auto' />
-                        <b className='text-4xl font-bold'>Let’s create new playlist</b>
-                        <Link
-                            to={endPoint.music}
-                            className='mx-auto text-center bg-secondary py-2 px-3 rounded-xl hover:opacity-80'
-                        >
-                            Listen music
-                        </Link>
                     </div>
                 </div>
             :   <List title='Danh Sách Phát' list={myList} />}

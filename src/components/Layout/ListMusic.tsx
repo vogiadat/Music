@@ -32,6 +32,9 @@ import {useState} from 'react'
 import {HoverCard, HoverCardContent, HoverCardTrigger} from '@/components/ui/hover-card'
 import {IAddPlaylist} from '@/types/playlist'
 import {addToPlaylist} from '@/features/playlistSlice'
+import {Input} from '@/components/ui/input'
+import {Textarea} from '@/components/ui/textarea'
+import {Badge} from '@/components/ui/badge'
 
 type Props = {
     listSong: IMusic[]
@@ -127,7 +130,7 @@ const ListMusic = ({listSong}: Props) => {
                     return (
                         <li
                             key={song.id}
-                            className='grid grid-cols-12 p-2 rounded-2xl my-4 hover:cursor-pointer bg-neutral-800 bg-opacity-40 hover:bg-secondary hover:bg-opacity-80 transition-colors duration-150 ease-in-out'
+                            className='group grid grid-cols-12 p-2 rounded-2xl my-4 hover:cursor-pointer bg-neutral-800 bg-opacity-40 hover:bg-secondary hover:bg-opacity-80 transition-colors duration-150 ease-in-out'
                             onClick={() => handlePlayMusic(song)}
                         >
                             <div className='col-span-1 flex items-center text-xl px-2 font-semibold'>{index + 1}</div>
@@ -143,7 +146,14 @@ const ListMusic = ({listSong}: Props) => {
                                     />
                                 </div>
                                 <div>
-                                    <b className='text-xl truncate capitalize'>{song.name}</b>
+                                    <b className='text-xl truncate capitalize'>
+                                        {song.name}
+                                        {song.isPremium && (
+                                            <Badge className='ml-2 bg-secondary group-hover:bg-white group-hover:text-background'>
+                                                Premium
+                                            </Badge>
+                                        )}
+                                    </b>
                                     {song.author && (
                                         <p className='opacity-60 text-base'>
                                             {song.author?.firstName || '' + song.author?.lastName || ''}
@@ -163,12 +173,12 @@ const ListMusic = ({listSong}: Props) => {
                                     <HoverCardTrigger>
                                         <MoreHorizontal />
                                     </HoverCardTrigger>
-                                    <HoverCardContent align='end' className='max-w-fit border-none'>
+                                    <HoverCardContent align='end' className='gap-2 max-w-fit border-none'>
                                         <Dialog>
                                             <DialogTrigger asChild>
                                                 <Button
                                                     variant='default'
-                                                    className='bg-white text-background hover:bg-secondary hover:text-white'
+                                                    className='w-full bg-white text-background hover:bg-secondary hover:text-white'
                                                     onClick={() => setData({...data, mediaId: song.id})}
                                                 >
                                                     Thêm vào danh sách
@@ -215,6 +225,65 @@ const ListMusic = ({listSong}: Props) => {
                                                         </Button>
                                                     }
                                                 </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                        <Dialog>
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    variant='default'
+                                                    className='w-full bg-white text-background hover:bg-secondary hover:text-white'
+                                                >
+                                                    Chi tiết bài hát
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                                                <DialogHeader>
+                                                    <DialogTitle>Bài Hát</DialogTitle>
+                                                    <DialogDescription>Thông tin bài hát</DialogDescription>
+                                                </DialogHeader>
+                                                <div className='grid w-full max-w-sm items-center gap-2'>
+                                                    <Label htmlFor='name'>
+                                                        Bài Hát
+                                                        {song.isPremium && (
+                                                            <Badge className='ml-2 bg-secondary'>Premium</Badge>
+                                                        )}
+                                                    </Label>
+                                                    <Input
+                                                        id='name'
+                                                        className='bg-white text-background'
+                                                        defaultValue={song.name}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className='grid w-full max-w-sm items-center gap-2'>
+                                                    <Label htmlFor='artist'>Ca Sĩ</Label>
+                                                    <Input
+                                                        id='artist'
+                                                        className='bg-white text-background'
+                                                        defaultValue={
+                                                            song.author?.firstName || '' + song.author?.lastName || ''
+                                                        }
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className='grid w-full max-w-sm items-center gap-2'>
+                                                    <Label htmlFor='album'>Album</Label>
+                                                    <Input
+                                                        id='desc'
+                                                        className='bg-white text-background'
+                                                        defaultValue={song.album?.name}
+                                                        disabled
+                                                    />
+                                                </div>
+                                                <div className='grid w-full max-w-sm items-center gap-2'>
+                                                    <Label htmlFor='desc'>Nội Dung</Label>
+                                                    <Textarea
+                                                        id='desc'
+                                                        className='bg-white text-background'
+                                                        defaultValue={song.desc}
+                                                        disabled
+                                                    />
+                                                </div>
                                             </DialogContent>
                                         </Dialog>
                                     </HoverCardContent>

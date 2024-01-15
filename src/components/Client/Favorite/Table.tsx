@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {ArrowUpDown} from 'lucide-react'
+import {ArrowUpDown, Loader2, MoreHorizontal} from 'lucide-react'
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -12,6 +12,32 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
 
 import {Button} from '@/components/ui/button'
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table'
@@ -22,6 +48,13 @@ import {currentSong} from '@/features/musicSlice'
 import {errorValue} from '@/utils/constant'
 import {useToast} from '@/components/ui/use-toast'
 import {formatTime} from '@/hooks/functions'
+import {Label} from '@/components/ui/label'
+import {Textarea} from '@/components/ui/textarea'
+import {Input} from '@/components/ui/input'
+import {formatName} from '../../../hooks/functions'
+import {IAddPlaylist} from '@/types/playlist'
+import {addToPlaylist} from '@/features/playlistSlice'
+import {Badge} from '@/components/ui/badge'
 
 type Props = {
     data: Music[]
@@ -74,6 +107,15 @@ const columns: ColumnDef<Music>[] = [
             const music: IMusic = row.getValue('song')
 
             return <b className='text-xl font-medium capitalize'>{formatTime(music.duration)}</b>
+        },
+    },
+    {
+        id: 'actions',
+        enableHiding: false,
+        cell: ({row}) => {
+            const music = row.original
+
+            return <Actions music={music} />
         },
     },
 ]
@@ -177,3 +219,158 @@ const TableMusic = ({data}: Props) => {
 }
 
 export default TableMusic
+
+type PActions = {
+    music: Music
+}
+
+export const Actions = ({music}: PActions) => {
+    const dispatch = useAppDispatch()
+    const {song} = music
+    const {toast} = useToast()
+    const {myList} = useAppSelector((state) => state.playlist)
+    const [data, setData] = React.useState<IAddPlaylist>({mediaId: '', playListId: ''})
+    const [isLoading, setIsLoading] = React.useState<boolean>(false)
+
+    const handleAddPlaylist = async () => {
+        setIsLoading(true)
+        try {
+            await dispatch(addToPlaylist(data))
+            setIsLoading(false)
+            toast({
+                variant: 'success',
+                title: 'Success',
+                description: `Add song to playlist success`,
+            })
+        } catch (error) {
+            setIsLoading(false)
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: `Can't add to playlist`,
+            })
+        }
+    }
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8 p-0'>
+                    <span className='sr-only'>Open menu</span>
+                    <MoreHorizontal />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant='default'
+                                className='w-full bg-white text-background hover:bg-secondary hover:text-white'
+                                onClick={() => setData({...data, mediaId: song.id})}
+                            >
+                                Thêm vào danh sách
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                            <DialogHeader>
+                                <DialogTitle>Danh Sách</DialogTitle>
+                                <DialogDescription>Thêm vào sách bài hát theo sở thích của chính bạn</DialogDescription>
+                            </DialogHeader>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='name'>Tên Danh Sách</Label>
+                                <Select onValueChange={(playListId) => setData({...data, playListId})}>
+                                    <SelectTrigger className='w-full bg-white'>
+                                        <SelectValue placeholder='Chọn danh sách phát' />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectLabel>Danh Sách</SelectLabel>
+                                            {myList.map((item) => {
+                                                return (
+                                                    <SelectItem key={item.id} value={item.id}>
+                                                        {item.name}
+                                                    </SelectItem>
+                                                )
+                                            })}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <DialogFooter>
+                                {isLoading ?
+                                    <Button disabled>
+                                        <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                        Please wait
+                                    </Button>
+                                :   <Button type='button' onClick={handleAddPlaylist}>
+                                        Tạo
+                                    </Button>
+                                }
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant='default'
+                                className='w-full bg-white text-background hover:bg-secondary hover:text-white'
+                            >
+                                Chi tiết bài hát
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className='sm:max-w-[425px] bg-white text-background'>
+                            <DialogHeader>
+                                <DialogTitle>Bài Hát</DialogTitle>
+                                <DialogDescription>Thông tin bài hát</DialogDescription>
+                            </DialogHeader>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='name'>
+                                    Bài Hát
+                                    {song.isPremium && <Badge className='ml-2 bg-secondary'>Premium</Badge>}
+                                </Label>
+                                <Input
+                                    id='name'
+                                    className='bg-white text-background'
+                                    defaultValue={song.name}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='artist'>Ca Sĩ</Label>
+                                <Input
+                                    id='artist'
+                                    className='bg-white text-background'
+                                    defaultValue={formatName(song.author?.firstName || '', song.author?.lastName || '')}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='album'>Album</Label>
+                                <Input
+                                    id='desc'
+                                    className='bg-white text-background'
+                                    defaultValue={song.album?.name}
+                                    disabled
+                                />
+                            </div>
+                            <div className='grid w-full max-w-sm items-center gap-2'>
+                                <Label htmlFor='desc'>Nội Dung</Label>
+                                <Textarea
+                                    id='desc'
+                                    className='bg-white text-background'
+                                    defaultValue={song.desc}
+                                    disabled
+                                />
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
