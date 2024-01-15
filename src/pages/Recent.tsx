@@ -39,7 +39,7 @@ const Recent = () => {
                             <div>
                                 <b className='text-4xl font-extrabold'>History</b>
                             </div>
-                            <div className={`w-full h-[850px] overflow-y-scroll`}>
+                            <div className={`w-full h-[850px]`}>
                                 <ListMusic listSong={history} />
                             </div>
                         </div>
