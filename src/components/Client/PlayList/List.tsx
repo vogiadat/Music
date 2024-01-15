@@ -2,7 +2,7 @@ import {endPoint, errorValue} from '@/utils/constant'
 import {Link} from 'react-router-dom'
 import {useAppDispatch, useAppSelector} from '@/app/hook'
 import {IPlaylist} from '@/types/playlist'
-import {delPlaylist, detailPlayList} from '@/features/playlistSlice'
+import {delPlaylist, detailPlayList, newPlaylist} from '@/features/playlistSlice'
 import {
     Dialog,
     DialogContent,
@@ -17,7 +17,6 @@ import {Label} from '@/components/ui/label'
 import {Input} from '@/components/ui/input'
 import {ListVideo, Loader2} from 'lucide-react'
 import {useState} from 'react'
-import {createPlaylist} from '@/services/playlist.service'
 import {useToast} from '@/components/ui/use-toast'
 import {ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger} from '@/components/ui/context-menu'
 
@@ -36,7 +35,7 @@ const List = ({title, list}: Props) => {
     const handlePlaylist = async () => {
         setIsLoading(true)
         try {
-            await createPlaylist(playlistName)
+            dispatch(newPlaylist(playlistName))
             setIsLoading(false)
             toast({
                 variant: 'success',
